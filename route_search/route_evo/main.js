@@ -28,7 +28,7 @@ function addtostoppoint(){
   }
  }
 
-const directions=document.getElementById("directions");
+const directions=document.getElementsByTagName("calcite-accordion-item")[0];
 
  // マップ上の検索結果をリセットするために Layer Group を作成
 const startLayerGroup = L.layerGroup().addTo(map);
@@ -58,13 +58,18 @@ function searchRoute() {
      .then((response) => {
        routeLines.clearLayers(); // 前作ったやつを消す
        geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
+
+       /* // ルート検索後の位置について
        console.log(response.routes.geoJson.features)
        feature=response.routes.geoJson.features[0].geometry.coordinates;
        console.log(feature.length/2|0);
        console.log(feature[feature.length/2|0]);
        fly_sen=feature[feature.length/2|0];
        map.flyTo( [fly_sen[1],fly_sen[0]], 9); // 検索後その位置に飛びたい
-       // '<calcite-icon icon="arrow-bold-up" /></calcite-icon>' + このアイコンで
+      */
+
+       // '<calcite-icon icon="arrow-bold-up" /></calcite-icon>' + アイコンをルート案内に追加したい
+       // Location1 とか Location2 とかの名前変えたい
        const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
        directions.innerHTML = directionsHTML;
        startCoords = null; // 最後にスタート、ゴール地点の情報を消す
@@ -89,6 +94,7 @@ const searchControl = L.esri.Geocoding.geosearch({
   
 // 検索結果最上位を基本的に取得
 searchControl.on('results', function (data) {
+    console.log(data);
     if(data.results){
         coordinates = data.results[0].latlng;
         addtostoppoint();
