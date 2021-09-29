@@ -259,7 +259,7 @@ searchControl.on('results', function (data) {
                 max-height: 50%;
                 right: 20px;
                 top: 20px;
-                overflow-y: auto; /* Show a scrollbar if needed */
+                overflow-y: auto; 
                 background: white;
                 font-family: Arial, Helvetica, Verdana;
                 line-height: 1.5;
@@ -450,7 +450,7 @@ map.on("click", (e) => {
                 max-height: 50%;
                 right: 20px;
                 top: 20px;
-                overflow-y: auto; /* Show a scrollbar if needed */
+                overflow-y: auto; 
                 background: white;
                 font-family: Arial, Helvetica, Verdana;
                 line-height: 1.5;
