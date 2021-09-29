@@ -14,21 +14,23 @@
 1. 開発者アカウントにログインし、ダッシュボードから API キーの設定編集ページに移動する
 
 ダッシュボードから API キーの管理画面へ移動
-![イメージ](../images/dashboard.png)
+![ダッシュボードからAPI キーの管理画面に移動します](../images/dashboard.png)
 
 API キーの管理画面。使用する API キーの Edit API Key をクリックし、API キーの設定編集ページへ。
-![イメージ](../images/editapi.png)
+![API キーの管理画面から使用する API キーを編集](../images/editapi.png)
 
 2. API キーで使用するロケーションサービスを設定
 
 ページ中部の Location services の欄から Configure services をクリック
-![イメージ](../images/config.png)
+![編集ページの Configure services を選択](../images/config.png)
 
-この中から Geocoding (not stored) と Routing にチェックを付ける
-![イメージ](../images/location.png)
+この中から Geocoding (not stored) と Routing にチェック
+![使用するサービスをチェック](../images/location.png)
+
+ここまでで、使用するロケーションサービスが利用できるようになりましたので、ここからルート検索アプリを作成していきます。
 
 ## 地図の描画
-まず、はじめに地図を描画しましょう。以下に HTML と JavaScrpt のコードを記します。
+まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。
 
 1. HTML 
 Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
@@ -98,7 +100,7 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 ```
 
 実際に地図の描画をした様子は以下の通りとなっています
-![イメージ](../images/map_only.png)
+![地図の描画のみをした場合](../images/map_only.png)
 
 ## 地名の検索の導入
 今回、ルート検索を地名や住所から行えるようにするために esri-Leaflet-geocoder を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
@@ -195,8 +197,8 @@ searchControl.on('results', function (data) {
 });
 ```
 
-住所検索をした様子は以下のようになります
-![イメージ](../images/geocode.gif)
+地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
+![地名検索の結果表示](../images/geocode.gif)
 
 ## ルート検索の導入
 ルート検索を導入するために ArcGIS REST JS を参照します。ここでは、マップ上でクリックをするとマーカーが表示され、もう一度クリックした場所へのルート検索を実行するようなサンプルを作成しています。また、ルートまでの案内文も表示しています。
@@ -386,8 +388,8 @@ map.on("click", (e) => {
 
 ```
 
-ルート検索の結果としては以下のようになります
-![イメージ](../images/routing.gif)
+ルート検索の結果としては以下のようになります。
+![クリックした地点同士でルート検索](../images/routing.gif)
 
 ## 地名検索をルート検索に反映
 最後に地名検索をルート検索に反映させる。
@@ -580,10 +582,10 @@ map.on("click", (e) => {
   });
 ```
 
-![イメージ](../images/app.gif)
+![地名検索でルート検索地点を追加](../images/app.gif)
 
 ## Calcite Design Systemによるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として Calcite Design System を使ったアプリのデザインの例をご紹介します。
-Calcite Design System は、ESRI が提供しているアプリのデザインをサポートするものです。これらを使って以下のようなアプリデザインを作成することができます。
+Calcite Design System は、ESRI が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなアプリデザインを作成することができます。
 
-![イメージ](../images/calcite.gif)
+![Calcite Design System](../images/calcite.png)
