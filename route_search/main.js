@@ -9,7 +9,8 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
 }).addTo(map);
 
-function addtostoppoint(){
+// ルート検索をしたい地点の取得
+function addstoppoint(){
   if (currentStep === "start") {
     startLayerGroup.clearLayers(); 
     endLayerGroup.clearLayers(); 
@@ -54,12 +55,11 @@ function searchRoute() {
        })
        // 結果の表示
      .then((response) => {
-       routeLines.clearLayers(); // 前作ったやつを消す
-       L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
-        console.log(response);
+       routeLines.clearLayers(); // 前回の結果をリセット
+       L.geoJSON(response.routes.geoJson).addTo(routeLines); 
        const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
        directions.innerHTML = directionsHTML;
-       startCoords = null; // 最後にスタート、ゴール地点の情報を消す
+       startCoords = null; // 最後にスタート、ゴール地点の位置情報を消す
        endCoords = null;
      })
      // エラー時の表示
@@ -83,14 +83,14 @@ const searchControl = L.esri.Geocoding.geosearch({
 searchControl.on('results', function (data) {
     if(data.results){
         coordinates = data.results[0].latlng;
-        addtostoppoint();
+        addstoppoint();
     }    
 });
 
 // クリックした場所の位置情報を返す
 map.on("click", (e) => {
   coordinates = e.latlng;
-  addtostoppoint();
+  addstoppoint();
 });
 
 
