@@ -4,6 +4,8 @@
 
 今回は、Leaflet と Esri Leaflet 及び、同じくオープンソースとして ESRI が提供している [ArcGIS REST JS](https://developers.arcgis.com/arcgis-rest-js/) を使ったルート検索アプリを作成します。
 
+JavaScript を触ったことがない方や環境設定などが特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、マッピング アプリケーション用の新しい Pen 上で作成することで、オンライン上で簡潔することができるので、おすすめします。
+
 ## API キーの作成と設定
 始めに ルート検索と地名の検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
 
@@ -28,6 +30,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 ![使用するサービスをチェック](../images/location.png)
 
 ここまでで、使用するロケーションサービスが利用できるようになりましたので、ここからルート検索アプリを作成していきます。
+
 
 ## 地図の描画
 まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。
@@ -129,9 +132,13 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
         <!-- ESRI のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
         <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
 
+        <!-- esri-Leaflet-geocoder への参照を追加 -->
+        
         <!-- CDN から esri-Leaflet-geocoder の css と js を取得 -->
         <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css" integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g==" crossorigin="">
         <script src="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.js"integrity="sha512-enHceDibjfw6LYtgWU03hke20nVTm+X5CRi9ity06lGQNtC9GkBNl/6LoER6XzSudGiXy++avi1EbIg9Ip4L1w==" crossorigin=""></script>
+        
+        <!-- 追加終了 -->
         
         <style>
             body { margin:0; padding:0; }
@@ -177,7 +184,9 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 // 検索結果を入れるレイヤーの作成
 let searchlayers=L.layerGroup().addTo(map);
 
-// 住所、場所検索
+// 地名検索の追加
+
+// 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
     position: 'topleft', // 検索窓をどこに配置するかを指定
     placeholder: '住所または場所の名前を入力',
@@ -195,6 +204,8 @@ searchControl.on('results', function (data) {
         L.marker(coordinates).addTo(searchlayers);
     }    
 });
+
+// 地名検索の追加を終了
 ```
 
 地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
@@ -235,10 +246,14 @@ searchControl.on('results', function (data) {
         integrity="sha512-enHceDibjfw6LYtgWU03hke20nVTm+X5CRi9ity06lGQNtC9GkBNl/6LoER6XzSudGiXy++avi1EbIg9Ip4L1w=="
         crossorigin=""></script>
 
+        <!-- ArcGIS REST JS を追加 -->
+
         <!-- CDN から ArcGIS REST JS の js を取得 -->
         <script src="https://unpkg.com/@esri/arcgis-rest-request@3.0.0/dist/umd/request.umd.js"></script>
         <script src="https://unpkg.com/@esri/arcgis-rest-routing@3.0.0/dist/umd/routing.umd.js"></script>
         <script src="https://unpkg.com/@esri/arcgis-rest-auth@3.0.0/dist/umd/auth.umd.js"></script>
+
+        <!-- 追加終了 -->
 
         <style>
             body { margin:0; padding:0; }
@@ -252,6 +267,7 @@ searchControl.on('results', function (data) {
                 font-size: 14px;
                 color: #323232;
             }
+            /* css の追加 */
             #directions {
                 position: absolute;
                 z-index: 1000;
@@ -266,13 +282,16 @@ searchControl.on('results', function (data) {
                 font-size: 14px;
                 padding: 10px;
             }
+            /* 追加終了 */
         </style>
 
     </head>
 
     <body>
         <div id="map"></div>
+        <!-- ルート案内の内容を表記する要素を追加 -->
         <div id="directions">ルート検索をしたい場所をクリックしてください</div>
+        <!-- 追加終了 -->
         <script type="text/javascript" src="main.js"></script>
     </body>
 
@@ -319,6 +338,8 @@ searchControl.on('results', function (data) {
         L.marker(coordinates).addTo(searchlayers);
     }    
 });
+
+// ルート検索の機能の追加
 
 /* ルート検索の機能 */
 
@@ -385,6 +406,8 @@ map.on("click", (e) => {
     coordinates = e.latlng;
     addstoppoint();
   });
+
+// 追加終了
 
 ```
 
@@ -463,6 +486,7 @@ map.on("click", (e) => {
 
     <body>
         <div id="map"></div>
+        <!-- 機能追加に伴って文章を変更 -->
         <div id="directions">ルート検索をしたい場所をクリックまたは左の検索ボタンで追加してください</div>
         <script type="text/javascript" src="main.js"></script>
     </body>
@@ -507,7 +531,9 @@ const searchControl = L.esri.Geocoding.geosearch({
 searchControl.on('results', function (data) {
     if(data.results){
         coordinates = data.results[0].latlng;
+        // 関数を追加
         addstoppoint();
+        //　追加終了
         /* 使用しなくなるため削除
         searchlayers.clearLayers(); //前回の結果を削除
         L.marker(coordinates).addTo(searchlayers);
