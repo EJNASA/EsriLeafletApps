@@ -1,4 +1,4 @@
-//const apiKey="YOUR_API_KEY";
+const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
 const map = L.map('map', {
@@ -120,17 +120,7 @@ function searchRoute() {
      .then((response) => {
       console.log(response);
        routeLines.clearLayers(); // 前作ったやつを消す
-       geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示 追加している途中でできればぐるぐるほしい
-     
-       /* // ルート検索後の位置について
-       console.log(response.routes.geoJson.features)
-       feature=response.routes.geoJson.features[0].geometry.coordinates;
-       console.log(feature.length/2|0);
-       console.log(feature[feature.length/2|0]);
-       fly_sen=feature[feature.length/2|0];
-       map.flyTo( [fly_sen[1],fly_sen[0]], 9); // 検索後その位置に飛びたい
-      */
-
+       geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
        const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
        directions.innerHTML = add_direction(directionsHTML,startpoint,endpoint);
        startCoords = null; // 最後にスタート、ゴール地点の情報を消す
@@ -150,12 +140,12 @@ end_search=geocoder("end");
 input_el=document.getElementsByTagName("input");
 
 start_container=start_search.getContainer();
-search.appendChild(start_container); // 納得いってない。これであっているのか…
+search.appendChild(start_container); 
 end_container=end_search.getContainer();
 search.appendChild(end_container); 
 
-start_container.click(); //これも納得いってない 
-end_container.click(); //これも納得いってない 
+start_container.click();  
+end_container.click();
 
 var geocodeService = L.esri.Geocoding.geocodeService({
   apikey: apiKey 
@@ -164,7 +154,6 @@ var geocodeService = L.esri.Geocoding.geocodeService({
 // クリックした場所の位置情報を返す
 map.on("click", (e) => {
   coordinates = e.latlng;
-  //console.log(start_container.innerHTML);
   geocodeService.reverse().latlng(coordinates).run(function (error, result) {
     if (error) {
       return;
