@@ -4,14 +4,14 @@
 
 今回は、Leaflet と Esri Leaflet 及び、同じくオープンソースとして ESRI が提供している [ArcGIS REST JS](https://developers.arcgis.com/arcgis-rest-js/) を使ったルート検索アプリを作成します。
 
-ArcGIS REST JS は、ESRI が提供している ArcGIS REST API を JavaScript で呼び出すオープンソースのライブラリです。今回は、このライブラリを使用することでルート検索を実装していきます。 
+ArcGIS REST JS は、ESRI が提供している ArcGIS REST API の JavaScript ベースのラッパーです。今回は、こちらを使用することでルート検索を実装していきます。 
 
 JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、自身の環境で行う方は、それぞれファイル名を index.html と main.js という形式で解説しているのでファイル名のご参考にしてくださればと思います。
 
-本リポジトリには、このウェビナーで作成する Web アプリの完成形として、 index.html と main.js を用意していますので、最終的な動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと思います。
+本リポジトリには、このウェビナーで作成する Web アプリの完成形として、 index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと思います。
 
 ## API キーの作成と設定
-始めに ルート検索と地名の検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
+始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
 
 「[開発者アカウントの作成](https://esrijapan.github.io/arcgis-dev-resources/guide/get-dev-account/)」と「[API キーの取得](https://esrijapan.github.io/arcgis-dev-resources/guide/get-api-key/)」を参照に作成を行ってください。
 
