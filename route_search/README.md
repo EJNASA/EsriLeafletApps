@@ -4,7 +4,11 @@
 
 今回は、Leaflet と Esri Leaflet 及び、同じくオープンソースとして ESRI が提供している [ArcGIS REST JS](https://developers.arcgis.com/arcgis-rest-js/) を使ったルート検索アプリを作成します。
 
-JavaScript を触ったことがない方や環境設定などが特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、マッピング アプリケーション用の新しい Pen 上で作成することで、オンライン上で簡潔することができるので、おすすめします。
+ArcGIS REST JS は、ESRI が提供している ArcGIS REST API を JavaScript で呼び出すオープンソースのライブラリです。今回は、このライブラリを使用することでルート検索を実装していきます。 
+
+JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、自身の環境で行う方は、それぞれファイル名を index.html と main.js という形式で解説しているのでファイル名のご参考にしてくださればと思います。
+
+本リポジトリには、このウェビナーで作成する Web アプリの完成形として、 index.html と main.js を用意していますので、最終的な動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと思います。
 
 ## API キーの作成と設定
 始めに ルート検索と地名の検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
@@ -33,7 +37,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 
 
 ## 地図の描画
-まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。
+まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。この時、参照するリンクは leaflet.js と Esri Lealfet と ESRI が提供しているベースマップを表示するために [esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector) を参照します。
 
 1. HTML 
 Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
@@ -67,9 +71,6 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
                 bottom:0;
                 right:0;
                 left:0;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 14px;
-                color: #323232;
             }
         </style>
 
@@ -91,6 +92,8 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
+// 背景地図の追加 
+
 // マップを描画する場所を富士山上空に指定
 const map = L.map('map', {
     minZoom: 2
@@ -100,13 +103,14 @@ const map = L.map('map', {
 L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
 }).addTo(map);
+
 ```
 
 実際に地図の描画をした様子は以下の通りとなっています
 ![地図の描画のみをした場合](../images/map_only.png)
 
 ## 地名の検索の導入
-今回、ルート検索を地名や住所から行えるようにするために esri-Leaflet-geocoder を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
+今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
 
 1. index.html に esri-leaflet-geocorder への参照を追加
 
@@ -148,9 +152,6 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
                 bottom:0;
                 right:0;
                 left:0;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 14px;
-                color: #323232;
             }
         </style>
 
@@ -171,7 +172,9 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
-// マップを描画する場所を富士山上空に指定
+// 背景地図の追加 
+
+// 地図を描画する場所を富士山上空に指定
 const map = L.map('map', {
     minZoom: 2
 }).setView([35.362752, 138.729858], 12);
@@ -181,10 +184,12 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
 }).addTo(map);
 
-// 検索結果を入れるレイヤーの作成
-let searchlayers=L.layerGroup().addTo(map);
+// 背景地図の追加の終了
 
 // 地名検索の追加
+
+// 検索結果を入れるレイヤーの作成
+let searchlayers=L.layerGroup().addTo(map);
 
 // 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
@@ -258,29 +263,25 @@ searchControl.on('results', function (data) {
         <style>
             body { margin:0; padding:0; }
             #map {
-                position: absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 14px;
-                color: #323232;
+            position: absolute;
+            top:0;
+            bottom:0;
+            right:0;
+            left:0;
             }
-            /* css の追加 */
+            /* CSS の追加 */
             #directions {
-                position: absolute;
-                z-index: 1000;
-                width: 30%;
-                max-height: 50%;
-                right: 20px;
-                top: 20px;
-                overflow-y: auto; 
-                background: white;
-                font-family: Arial, Helvetica, Verdana;
-                line-height: 1.5;
-                font-size: 14px;
-                padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            width: 30%;
+            max-height: 50%;
+            right: 20px;
+            top: 20px;
+            overflow-y: auto; 
+            background: white;
+            line-height: 1.5;
+            font-size: 14px;
+            padding: 10px;
             }
             /* 追加終了 */
         </style>
@@ -305,7 +306,9 @@ searchControl.on('results', function (data) {
 const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
-// マップを描画する場所を富士山上空に指定
+// 地図の描画設定
+
+// 地図を描画する場所を富士山上空に指定
 const map = L.map('map', {
     minZoom: 2
 }).setView([35.362752, 138.729858], 12);
@@ -313,14 +316,14 @@ const map = L.map('map', {
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
-}).addTo(map);
+}).addTo(map); 
 
-/* 住所検索の機能 */
+/* 地名検索の機能 */
 
 // 検索結果を入れるレイヤーの作成
 let searchlayers=L.layerGroup().addTo(map);
 
-// 住所、場所検索
+// 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
     position: 'topleft', // 検索窓をどこに配置するかを指定
     placeholder: '住所または場所の名前を入力',
@@ -340,8 +343,6 @@ searchControl.on('results', function (data) {
 });
 
 // ルート検索の機能の追加
-
-/* ルート検索の機能 */
 
 // マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
 const startLayerGroup = L.layerGroup().addTo(map);
@@ -415,81 +416,77 @@ map.on("click", (e) => {
 ![クリックした地点同士でルート検索](../images/routing.gif)
 
 ## 地名検索をルート検索に反映
-最後に地名検索をルート検索に反映させる。
+最後に地名検索をルート検索に反映させます。
 
 1. 地名検索後、ルート検索の機能が動作するように設定
 
 ```HTML
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Esri Leaflet</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Esri Leaflet</title>
 
-        <!-- CDN から Leaflet の css と JS を取得 -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-            integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-            crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-            crossorigin=""></script>
+  <!-- CDN から Leaflet の css と JS を取得 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
 
-        <!-- CDN から esri-Leaflet の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+  <!-- CDN から esri-Leaflet の js を取得 -->
+  <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
 
-        <!-- ESRI のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
-        
-        <!-- CDN から esri-Leaflet-geocoder の css と js を取得 -->
-        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
-        integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-        crossorigin="">
-        <script src="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.js"
-        integrity="sha512-enHceDibjfw6LYtgWU03hke20nVTm+X5CRi9ity06lGQNtC9GkBNl/6LoER6XzSudGiXy++avi1EbIg9Ip4L1w=="
-        crossorigin=""></script>
+  <!-- ESRI のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
+  <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
 
-        <!-- CDN から ArcGIS REST JS の js を取得 -->
-        <script src="https://unpkg.com/@esri/arcgis-rest-request@3.0.0/dist/umd/request.umd.js"></script>
-        <script src="https://unpkg.com/@esri/arcgis-rest-routing@3.0.0/dist/umd/routing.umd.js"></script>
-        <script src="https://unpkg.com/@esri/arcgis-rest-auth@3.0.0/dist/umd/auth.umd.js"></script>
+   <!-- CDN から esri-Leaflet-geocoder の css と js を取得 -->
+   <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
+   integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+   crossorigin="">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.js"
+   integrity="sha512-enHceDibjfw6LYtgWU03hke20nVTm+X5CRi9ity06lGQNtC9GkBNl/6LoER6XzSudGiXy++avi1EbIg9Ip4L1w=="
+   crossorigin=""></script>
 
-        <style>
-            body { margin:0; padding:0; }
-            #map {
-                position: absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 14px;
-                color: #323232;
-            }
-            #directions {
-                position: absolute;
-                z-index: 1000;
-                width: 30%;
-                max-height: 50%;
-                right: 20px;
-                top: 20px;
-                overflow-y: auto; 
-                background: white;
-                font-family: Arial, Helvetica, Verdana;
-                line-height: 1.5;
-                font-size: 14px;
-                padding: 10px;
-            }
-        </style>
+   <!-- CDN から ArcGIS REST JS の js を取得 -->
+   <script src="https://unpkg.com/@esri/arcgis-rest-request@3.0.0/dist/umd/request.umd.js"></script>
+   <script src="https://unpkg.com/@esri/arcgis-rest-routing@3.0.0/dist/umd/routing.umd.js"></script>
+   <script src="https://unpkg.com/@esri/arcgis-rest-auth@3.0.0/dist/umd/auth.umd.js"></script>
 
-    </head>
+  <style>
+    body { margin:0; padding:0; }
+    #map {
+        position: absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        left:0;
+      }
+      #directions {
+      position: absolute;
+      z-index: 1000;
+      width: 30%;
+      max-height: 50%;
+      right: 20px;
+      top: 20px;
+      overflow-y: auto; 
+      background: white;
+      line-height: 1.5;
+      font-size: 14px;
+      padding: 10px;
+    }
+  </style>
 
-    <body>
-        <div id="map"></div>
-        <!-- 機能追加に伴って文章を変更 -->
-        <div id="directions">ルート検索をしたい場所をクリックまたは左の検索ボタンで追加してください</div>
-        <script type="text/javascript" src="main.js"></script>
-    </body>
+</head>
+
+<body>
+  <div id="map"></div>
+  <div id="directions">ルート検索をしたい場所をクリックまたは左の検索ボタンで追加してください</div>
+  
+  <script type="text/javascript" src="main.js"></script>
+</body>
 
 </html>
 ```
@@ -499,7 +496,9 @@ map.on("click", (e) => {
 const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
-// マップを描画する場所を富士山上空に指定
+// 地図の描画設定
+
+// 地図を描画する場所を富士山上空に指定
 const map = L.map('map', {
     minZoom: 2
 }).setView([35.362752, 138.729858], 12);
@@ -509,15 +508,15 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
 }).addTo(map);
 
-/* 住所検索の機能 */
+/* 地名検索の機能 */
 
 /*
-使用しなくなるため削除
+使用しなくてよいため削除
 // 検索結果を入れるレイヤーの作成
 let searchlayers=L.layerGroup().addTo(map);
 */
 
-// 住所、場所検索
+// 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
     position: 'topleft', // 検索窓をどこに配置するかを指定
     placeholder: '住所または場所の名前を入力',
@@ -534,7 +533,7 @@ searchControl.on('results', function (data) {
         // 関数を追加
         addstoppoint();
         //　追加終了
-        /* 使用しなくなるため削除
+        /* 使用しなくてよいため削除
         searchlayers.clearLayers(); //前回の結果を削除
         L.marker(coordinates).addTo(searchlayers);
         */
@@ -573,11 +572,11 @@ function addstoppoint(){
 
 // ルート検索の実行をする関数
 function searchRoute() {
-    // Create the arcgis-rest-js authentication object to use later.
+    // arcgis-rest-js を利用するための認証用の変数を用意します。
     const authentication = new arcgisRest.ApiKey({
       key: apiKey
     });
-    // make the API request
+    // ルート検索
     arcgisRest
       .solveRoute({
         stops: [startCoords, endCoords], 
@@ -608,10 +607,12 @@ map.on("click", (e) => {
   });
 ```
 
+これを実行することで、以下のように地名検索後、ルート検索を行うように表示されます。
+
 ![地名検索でルート検索地点を追加](../images/app.gif)
 
 ## Calcite Design Systemによるデザイン
-ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として Calcite Design System を使ったアプリのデザインの例をご紹介します。
+ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
 Calcite Design System は、ESRI が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなアプリデザインを作成することができます。
 
 ![Calcite Design System](../images/calcite.png)
