@@ -308,7 +308,9 @@ searchControl.on('results', function (data) {
 ```
 
 2. main.js にクリックした地点でルート検索を行う機能を追加
-    1. ルート検索の機能の追加
+ここでは、ルート検索の機能の追加を二段階に分けて説明します。
+
+1. ルート検索の機能の追加
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
