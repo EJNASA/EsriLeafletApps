@@ -93,15 +93,17 @@
 <body>
   
   <div id="map"></div>
+  <!-- マップの読み込みができるまで表示されるローダー -->
   <calcite-loader active text="マップ読み込み中"></calcite-loader>
   <calcite-accordion id="menu">
     <calcite-accordion-item icon="arrow-right-left" item-title="ルート検索"
       item-subtitle="住所または場所の名前を入力してルート検索ができます" active>
-      <div id="geocode"></div><br><br><br><br><br><br> <!-- 改行の羅列は何とかしたい -->
+      <div id="geocode"></div><br><br><br><br><br><br> 
       <div id="direction">ルート検索結果</div>
     </calcite-accordion-item>    
 </calcite-accordion>
-  <script type="text/javascript" src="main.js"></script>
+
+<script type="text/javascript" src="main.js"></script>
 </body>
 
 </html>

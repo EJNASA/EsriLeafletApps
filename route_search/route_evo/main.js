@@ -1,6 +1,7 @@
-const apiKey="YOUR_API_KEY";
+//const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
+// zoom control の位置を変えるために zoomControl には false を指定
 const map = L.map('map', {
     minZoom: 2,
     zoomControl:false
@@ -8,11 +9,12 @@ const map = L.map('map', {
 
 L.control.zoom( { position: 'topright' } ).addTo( map );
 
+// Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
 }).addTo(map);
 
-// マーカーデザイン
+// マーカーデザインの設定 divicon1 は スタート地点、divicon2 はゴール地点
 const divIcon1 = L.divIcon({
   html: '<calcite-icon icon="number-circle-1" /></calcite-icon>',
   className: 'divicon',
@@ -27,11 +29,12 @@ const divIcon2 = L.divIcon({
   popupAnchor: [0, 0]
 });
 
-function geocoder(step){
+// 住所、地名検索の関数
+function geocoder(step){ // currentStep の値を指定するために引数に指定
   const searchControl = L.esri.Geocoding.geosearch({
     position: 'topright',
     placeholder: '住所または場所の名前を入力',
-    title:'住所検索',
+    title:'地名検索',
     collapseAfterResult:false,
     useMapBounds: false,
     providers: [L.esri.Geocoding.arcgisOnlineProvider({
@@ -70,6 +73,7 @@ function addtostoppoint(pointname){ // currentstep を引数に設定(optionの�
   }
  }
 
+ // ルート案内の文章に calcite-icon を指定するための関数
  function add_direction(str,startpoint,endpoint){
   str=str.replace("Location 1",startpoint);
   str=str.replace("Location 2",endpoint);
@@ -88,7 +92,6 @@ function addtostoppoint(pointname){ // currentstep を引数に設定(optionの�
   return direction;
 }
 
-//const directions=document.getElementsByTagName("calcite-accordion-item")[1];
 const search=document.getElementById("geocode");
 const directions=document.getElementById("direction");
 
@@ -139,11 +142,13 @@ end_search=geocoder("end");
 
 input_el=document.getElementsByTagName("input");
 
-start_container=start_search.getContainer();
-search.appendChild(start_container); 
+// 地名検索の検索ボタンの位置をアコーディオンメニュー内に入れる 
 end_container=end_search.getContainer();
 search.appendChild(end_container); 
+start_container=start_search.getContainer();
+search.appendChild(start_container); 
 
+// 検索バーを開いている状態に設定する
 start_container.click();  
 end_container.click();
 
@@ -151,7 +156,7 @@ var geocodeService = L.esri.Geocoding.geocodeService({
   apikey: apiKey 
 });
 
-// クリックした場所の位置情報を返す
+// クリックした場所の位置情報を返し、reverce geocoding を実行
 map.on("click", (e) => {
   coordinates = e.latlng;
   geocodeService.reverse().latlng(coordinates).run(function (error, result) {
@@ -165,14 +170,15 @@ map.on("click", (e) => {
     }
     addtostoppoint(address);
     if(currentStep=="start"){
-      input_el[1].value=address;
+      start_container.firstChild.value=address;
     }else{
-      input_el[0].value=address;
+      end_container.firstChild.value=address;
     }
   })
   
 });
 
+// map オブジェクトのロードが終わり次第 caicite-loader を削除
 map.on("load",function() {
   loading=document.getElementsByTagName("calcite-loader")[0];
   loading.removeAttribute("active");
