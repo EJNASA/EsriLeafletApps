@@ -8,7 +8,7 @@ ArcGIS REST JS は、ESRI が提供している ArcGIS REST API の JavaScript �
 
 JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、自身の環境で行う方は、それぞれファイル名を index.html と main.js という形式で解説しているのでファイル名のご参考にしてくださればと思います。
 
-本リポジトリには、このウェビナーで作成する Web アプリの完成形として、 index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと思います。
+本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと思います。
 
 ## API キーの作成と設定
 始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
@@ -92,7 +92,7 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
-// 背景地図の追加 
+// ベースマップの追加 
 
 // マップを描画する場所を富士山上空に指定
 const map = L.map('map', {
@@ -106,16 +106,22 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 
 ```
 
-実際に地図の描画をした様子は以下の通りとなっています
+Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを map という id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてくださればと思います。
+今回、日本国内でルート検索を行いたいと考えているため地図を表示する初期位置とズームレベルを指定する `.setView()` を map オブジェクトに付与します。
+次に使用するベースマップとして、ESRI の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector のモジュールである `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい ArcGIS:Navigation を選択しています。
+
+実際に地図を描画した様子は、以下の通りとなっています。これは富士山を中心にして表示しています。
 ![地図の描画のみをした場合](../images/map_only.png)
 
-ここまで、背景地図の描画で ESRI が提供する背景地図を使用しましたが、例に示している地図( Navigation )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照していただければと思います。
-また、 esri leaflet でベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)が用意されています。こちらを参考に目的にあった背景地図の選択をしてみていただければと思います。特に[カスタムしたベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)は、日本語表現の地図を表示することができます。
+ここまで、ベースマップの描画で ESRI が提供するベースマップを使用しましたが、例に示している地図( ArcGIS:Navigation )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照していただければと思います。
+また、 esri leaflet でベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)が用意されています。こちらを参考に目的にあったベースマップの選択をしてみていただければと思います。特に[カスタムしたベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)は、日本語表現の地図を表示することができます。
 
 ## 地名の検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
 
-1. index.html に esri-leaflet-geocorder への参照を追加
+JavaScript 部分のコードに関しては、二つに分けて説明しています。
+
+1. index.html に esri-leaflet-geocoder の参照を追加
 
 ```HTML
 <html>
@@ -168,14 +174,14 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 </html>
 ```
 
-2. main.js に住所検索の機能を追加
+2. main.js に地名検索の機能を追加
 
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
 const basemapEnum = "ArcGIS:Navigation";
 
-// 背景地図の追加 
+// ベースマップの追加 
 
 // 地図を描画する場所を富士山上空に指定
 const map = L.map('map', {
@@ -187,12 +193,9 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
   apiKey: apiKey
 }).addTo(map);
 
-// 背景地図の追加の終了
+// ベースマップの追加の終了
 
 // 地名検索の追加
-
-// 検索結果を入れるレイヤーの作成
-let searchlayers=L.layerGroup().addTo(map);
 
 // 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
@@ -203,7 +206,59 @@ const searchControl = L.esri.Geocoding.geosearch({
       apikey: apiKey
     })]
 }).addTo(map);
-  
+
+// 地名検索の追加を終了
+```
+
+`L.esri.Geocoding.geosearch` を使用して、地名検索を行うボタンを地図上に表示し、それらを変数 `searchControl` に入れています。今回指定している option とその説明を以下に羅列します。 
+
+- position:検索バーと検索ボタンをどこに配置するかを指定します。デフォルトでは `topleft` を指定します。
+- placeholder:検索バー内に何を入力する場所かについての説明を記します。
+- useMapBounds:検索する縮尺範囲を指定します。デフォルトでは縮尺範囲 12 で検索をします。今回は、false に指定しています。
+- provideers:地名の検索時使用するプロバイダを指定します。今回は、arcGIS Online サーバーを使用しているので、API キーをセットして使用します。
+
+これらの詳しい使い方、これ以外の option については、[API リファレンス](https://esri.github.io/esri-leaflet/api-reference/controls/geosearch.html)を参照してください。
+
+しかし、このままでは地名の検索を行っただけですので、結果を地図上に反映することが出来ません。そのため次に地名検索を行った後に地図上に反映させます。
+
+```JavaScript
+// API キーを入力
+const apiKey="YOUR_API_KEY";
+const basemapEnum = "ArcGIS:Navigation";
+
+// ベースマップの追加 
+
+// 地図を描画する場所を富士山上空に指定
+const map = L.map('map', {
+    minZoom: 2
+}).setView([35.362752, 138.729858], 12);
+
+// Esri のベクタータイルをベースマップに設定
+L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+  apiKey: apiKey
+}).addTo(map);
+
+// ベースマップの追加の終了
+
+// 地名検索の追加
+
+// 地名検索
+const searchControl = L.esri.Geocoding.geosearch({
+    position: 'topleft', // 検索窓をどこに配置するかを指定
+    placeholder: '住所または場所の名前を入力',
+    useMapBounds: false, // 世界中からの検索結果を出力
+    providers: [L.esri.Geocoding.arcgisOnlineProvider({
+      apikey: apiKey
+    })]
+}).addTo(map);
+
+// 地名検索の追加を終了
+
+// 地名検索を行った後の動作を追加
+
+// 検索結果を入れるレイヤーの作成
+let searchlayers=L.layerGroup().addTo(map);
+
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
 searchControl.on('results', function (data) {
     if(data.results){
@@ -213,15 +268,18 @@ searchControl.on('results', function (data) {
     }    
 });
 
-// 地名検索の追加を終了
+// 地名検索を行った後の動作を追加の終了
+
 ```
+
+先に検索したものをまとめて管理するためにポイント用のレイヤーとして `searchlayers` を用意します。[`L.layer.Group()`](https://leafletjs.com/reference-1.7.1.html#layergroup) は、 Leaflet の関数で、Leaflet 上で扱えるレイヤーを作成します。このレイヤーは、地名検索の結果を入れておくレイヤーになります。
+
+`searchControl.on` は、変数 `searchControl` に result の値が変更されたときに起動します。そのイベントが起動した時 `data.results` に値が入っていれば、変数 `coordinates` に `data.results` の一個目の値から `latlng`(位置情報) を取得します。その時、検索結果が地図上に反映されている場合その値を `.clearLayers()` で削除します。これによって地図上に検索した値が残らずに新しく検索した結果のみ表示することができます。 [`L.marker`](https://leafletjs.com/reference-1.7.1.html#marker) は、地図上に立てるピンを生成します。この値を `searchLayers` に追加することで地図上に検索した地点にピンを立てることができます。
 
 地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
 ![地名検索の結果表示](../images/geocode.gif)
 
-ここまで書いてきたコードは、[API リファレンス](https://esri.github.io/esri-leaflet/api-reference/controls/geosearch.html)と[サンプル](https://esri.github.io/esri-leaflet/examples/geocoding-control.html)を参考に作成していますのでそちらも参照していただければより理解が深まると思います。
-
-また、esri-leaflet-geocorder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、より多機能なルート検索などを作成したい方などはご参考にしていただければと思います。
+esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、より多機能なルート検索などを作成したい方などはご参考にしていただければと思います。
 これらの機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しているのでこちらもご確認いただければ、より柔軟に多くの機能を付与できます。
 
 ## ルート検索の導入
@@ -309,9 +367,6 @@ searchControl.on('results', function (data) {
 
 2. main.js にクリックした地点でルート検索を行う機能を追加
 
-    ここでは、ルート検索の機能の追加を二段階に分けて説明します。
-
-    1. ルート検索の機能の追加
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -331,9 +386,6 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 
 /* 地名検索の機能 */
 
-// 検索結果を入れるレイヤーの作成
-let searchlayers=L.layerGroup().addTo(map);
-
 // 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
     position: 'topleft', // 検索窓をどこに配置するかを指定
@@ -343,7 +395,10 @@ const searchControl = L.esri.Geocoding.geosearch({
       apikey: apiKey
     })]
 }).addTo(map);
-  
+
+// 検索結果を入れるレイヤーの作成
+let searchlayers=L.layerGroup().addTo(map);
+
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
 searchControl.on('results', function (data) {
     if(data.results){
@@ -354,6 +409,217 @@ searchControl.on('results', function (data) {
 });
 
 // ルート検索の機能の追加
+
+// ルート検索に使う変数と始点終点を決めるための関数の追加
+
+// directions の要素を取得し、ルート案内を表示する
+const directions=document.getElementById("directions");
+
+// マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
+const startLayerGroup = L.layerGroup().addTo(map);
+const endLayerGroup = L.layerGroup().addTo(map);
+const routeLines = L.layerGroup().addTo(map);
+
+let currentStep = "start"; 
+let startCoords, endCoords;
+
+// ルート検索をしたい地点を関数化
+function addstoppoint(){
+    if (currentStep === "start") {
+      startLayerGroup.clearLayers(); 
+      endLayerGroup.clearLayers(); 
+      routeLines.clearLayers(); 
+      L.marker(coordinates).addTo(startLayerGroup); // スタート地点にマーカーを作成
+      startCoords = [coordinates.lng,coordinates.lat]; 
+      currentStep = "end"; 
+    } else {
+      L.marker(coordinates).addTo(endLayerGroup); // ゴール地点にマーカーを作成
+      endCoords = [coordinates.lng,coordinates.lat]; 
+      currentStep = "start"; 
+    }
+  
+    if (startCoords && endCoords) {
+      searchRoute(); // スタート地点とゴール地点ができたらルート検索をかける
+    }
+}
+
+// ルート検索に使う変数と始点終点を決めるための関数の追加終了
+
+```
+
+まず始めにルート検索に必要な始点と終点を設置するために変数と関数を作成します。ルート検索をしたあと、もう一度別のルート検索を行う際に以前の検索結果を削除するために始点情報を入れるレイヤ `startLayerGroup` 、終点情報を入れるレイヤ `endLayerGroup`、ルートラインのライン情報を入れる `routeLines` に `L.layerGroup()` で Layer オブジェクトを設定します。他にも設定するポイントが始点か終点かを判定するために使うフラグとして変数 `currentStep` を作成し、始点の位置情報として `startCoords` 、終点の位置情報として `endCoords` を用意します。
+
+次にルート検索をしたい始点、終点の情報を作成する関数 `addstoppoint` を作成します。この関数では、ルート検索をかける前の位置情報の収納と始点終点の位置にピンを立てる役割を持たせます。また、始点終点の値に位置情報が設置されたらルート検索を行う条件分岐を用意します。次にルート検索を行う ArcGIS REST JS の `arcgisRest.solveRoute` を扱う関数 `searchRoute` を作成します。
+
+```JavaScript
+// API キーを入力
+const apiKey="YOUR_API_KEY";
+const basemapEnum = "ArcGIS:Navigation";
+
+// 地図の描画設定
+
+// 地図を描画する場所を富士山上空に指定
+const map = L.map('map', {
+    minZoom: 2
+}).setView([35.362752, 138.729858], 12);
+
+// Esri のベクタータイルをベースマップに設定
+L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+  apiKey: apiKey
+}).addTo(map); 
+
+/* 地名検索の機能 */
+
+// 地名検索
+const searchControl = L.esri.Geocoding.geosearch({
+    position: 'topleft', // 検索窓をどこに配置するかを指定
+    placeholder: '住所または場所の名前を入力',
+    useMapBounds: false, // 世界中からの検索結果を出力
+    providers: [L.esri.Geocoding.arcgisOnlineProvider({
+      apikey: apiKey
+    })]
+}).addTo(map);
+
+// 検索結果を入れるレイヤーの作成
+let searchlayers=L.layerGroup().addTo(map);
+
+// 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
+searchControl.on('results', function (data) {
+    if(data.results){
+        coordinates = data.results[0].latlng;
+        searchlayers.clearLayers(); //前回の結果を削除
+        L.marker(coordinates).addTo(searchlayers);
+    }    
+});
+
+// ルート検索の機能の追加
+
+// ルート検索に使う変数と始点終点を決めるための関数の追加
+
+// directions の要素を取得し、ルート案内を表示する
+const directions=document.getElementById("directions");
+
+// マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
+const startLayerGroup = L.layerGroup().addTo(map);
+const endLayerGroup = L.layerGroup().addTo(map);
+const routeLines = L.layerGroup().addTo(map);
+
+let currentStep = "start"; 
+let startCoords, endCoords;
+
+// ルート検索をしたい地点を関数化
+function addstoppoint(){
+    if (currentStep === "start") {
+      startLayerGroup.clearLayers(); 
+      endLayerGroup.clearLayers(); 
+      routeLines.clearLayers(); 
+      L.marker(coordinates).addTo(startLayerGroup); // スタート地点にマーカーを作成
+      startCoords = [coordinates.lng,coordinates.lat]; 
+      currentStep = "end"; 
+    } else {
+      L.marker(coordinates).addTo(endLayerGroup); // ゴール地点にマーカーを作成
+      endCoords = [coordinates.lng,coordinates.lat]; 
+      currentStep = "start"; 
+    }
+  
+    if (startCoords && endCoords) {
+      searchRoute(); // スタート地点とゴール地点ができたらルート検索をかける
+    }
+}
+
+// ルート検索に使う変数と始点終点を決めるための関数の追加終了
+
+// ルート検索の関数の追加開始
+
+// ルート検索の実行をする関数
+function searchRoute() {
+    // arcgis-rest-js を利用するための認証用の変数を用意します。
+    const authentication = new arcgisRest.ApiKey({
+      key: apiKey
+    });
+    // ルート検索
+    arcgisRest
+      .solveRoute({
+        stops: [startCoords, endCoords], 
+        endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
+        authentication,
+        params:{directionsLanguage:"ja"} // 使用言語を日本語に変更
+        })
+        // 結果の表示
+      .then((response) => {
+        routeLines.clearLayers(); // 前回の結果をリセット
+        L.geoJSON(response.routes.geoJson).addTo(routeLines); 
+        const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
+        directions.innerHTML = directionsHTML;
+        startCoords = null; // 最後にスタート、ゴール地点の位置情報をリセット
+        endCoords = null;
+      })
+      // エラー時の表示
+      .catch((error) => {
+        console.error(error);
+        alert("ルート検索に失敗しました");
+      });
+ }
+
+// 追加終了
+
+```
+関数 `searchRoute` では、初めに ArcGIS REST API を呼び出すために必要な API キーを ArcGIS REST JS で使用するために [arcgisRest.ApiKey](https://esri.github.io/arcgis-rest-js/api/auth/ApiKey/) で使用する API キーを指定します。そのあと、ルート検索を行う `arcgisRest.solveRoute` の設定をします。実行前に始点と終点を指定する必要があるため、 `startCoords` と `endCoords` の値が入力された後にルート検索を実行します。`arcgisRest.solveRoute` にはいくつか option が設定されていますが、今回使用している option の説明を以下に羅列します。
+
+- stops:ルート検索を行う始点と終点の座標をここで指定します。
+- endpoint:ルート検索を行うためのサービスのエンドポイントを指定します。今回は、ArcGIS REST API を使用します。
+- authenticaion:ルート検索を行うルート案内のサービスへのリクエストをするための認証を指定します。
+- params:ArcGIS REST JS の option に追加で与えるリクエストを指定します。今回は、ルート案内の言語を日本語に指定するために directionsLanguage パラメータを設定します。
+
+この他の option に関しては [API リファレンス](https://esri.github.io/arcgis-rest-js/api/routing/solveRoute/)をご参考にしてくださればと思います。
+このルート検索の結果は、`respose` に入ります。これを `.then` メソッドで出力します。そこから [`L.geoJSON`](https://leafletjs.com/reference-1.7.1.html#geojson)で検索結果からルートのラインを描画します。そして、ルート案内の文章がある `response.direction` からルート案内の文章を取得し、その文章を `directionsHTML` に入れ、directions の id 属性が設定されている要素を持っている `directions` の文章を `.innnerHTML` で `directionsHTML` に書き換えます。そのあと、始点終点の位置情報をリセットし、次の検索にスムーズに移行できるようにします。
+また、`.catch` メソッドも用意し、結果が返ってこないときやエラーが起きた際に Web コンソールにエラー値を返し、アラートを表示するようにします。
+
+```JavaScript
+// API キーを入力
+const apiKey="YOUR_API_KEY";
+const basemapEnum = "ArcGIS:Navigation";
+
+// 地図の描画設定
+
+// 地図を描画する場所を富士山上空に指定
+const map = L.map('map', {
+    minZoom: 2
+}).setView([35.362752, 138.729858], 12);
+
+// Esri のベクタータイルをベースマップに設定
+L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+  apiKey: apiKey
+}).addTo(map); 
+
+/* 地名検索の機能 */
+
+// 地名検索
+const searchControl = L.esri.Geocoding.geosearch({
+    position: 'topleft', // 検索窓をどこに配置するかを指定
+    placeholder: '住所または場所の名前を入力',
+    useMapBounds: false, // 世界中からの検索結果を出力
+    providers: [L.esri.Geocoding.arcgisOnlineProvider({
+      apikey: apiKey
+    })]
+}).addTo(map);
+
+// 検索結果を入れるレイヤーの作成
+let searchlayers=L.layerGroup().addTo(map);
+
+// 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
+searchControl.on('results', function (data) {
+    if(data.results){
+        coordinates = data.results[0].latlng;
+        searchlayers.clearLayers(); //前回の結果を削除
+        L.marker(coordinates).addTo(searchlayers);
+    }    
+});
+
+// ルート検索の機能の追加
+
+// directions の要素を取得し、ルート案内を表示する
+const directions=document.getElementById("directions");
 
 // マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
 const startLayerGroup = L.layerGroup().addTo(map);
@@ -422,8 +688,9 @@ map.on("click", (e) => {
 // 追加終了
 
 ```
+最後にルート検索を実行する方法として、`map.on` メソッドで地図上をクリックするとクリックした場所の情報を返すように指定します。その位置情報を `coordinates` に与えます。その後、関数 `addstopoint()` を起動して、ルート検索の始点終点を設定します。
 
-地図上でクリックすると以下の画像のようにルート検索を実行し、結果を右上に表示します。
+地図上でクリックすると以下の動画のようにルート検索を実行し、結果を地図上に描画し、右上に始点から終点までのルート案内を表示します。
 ![クリックした地点同士でルート検索](../images/routing.gif)
 
 こちらは、[ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/routing/) を参照に作られています。
@@ -523,12 +790,6 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 
 /* 地名検索の機能 */
 
-/*
-使用しなくてよいため削除
-// 検索結果を入れるレイヤーの作成
-let searchlayers=L.layerGroup().addTo(map);
-*/
-
 // 地名検索
 const searchControl = L.esri.Geocoding.geosearch({
     position: 'topleft', // 検索窓をどこに配置するかを指定
@@ -538,6 +799,12 @@ const searchControl = L.esri.Geocoding.geosearch({
       apikey: apiKey
     })]
 }).addTo(map);
+
+/*
+使用しなくてよいため削除
+// 検索結果を入れるレイヤーの作成
+let searchlayers=L.layerGroup().addTo(map);
+*/
   
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
 searchControl.on('results', function (data) {
@@ -619,6 +886,7 @@ map.on("click", (e) => {
     addstoppoint();
   });
 ```
+ここでは、地名検索を行った後 `coordinates` にジオコーディングした結果を持たせ、関数 `addstoppoint()` を起動します。この時、地名検索を結果を入れるようにしていたレイヤ `searchlayers` は使わないため、ここでは消しています。
 
 これを実行することで、以下のように地名検索後、ルート検索を行うようにされます。
 ![地名検索でルート検索地点を追加](../images/app.gif)
