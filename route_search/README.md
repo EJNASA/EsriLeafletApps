@@ -1,6 +1,6 @@
 # ルート検索アプリの作成
 [Leaflet](https://leafletjs.com/) は、メジャーで軽量なオープンソースのマッピング JavaScript ライブラリです。Leaflet は主に地図の表示や地図内に表示されるレイヤーの処理などを得意としています。
-[Esri Leaflet](https://esri.github.io/esri-leaflet/) は、Esri のロケーションサービスが使えるオープンソースの Leaflet プラグインとなっています。
+[Esri Leaflet](https://esri.github.io/esri-leaflet/) は、ESRI のロケーションサービスが使えるオープンソースの Leaflet プラグインとなっています。
 
 今回は、Leaflet と Esri Leaflet 及び、同じくオープンソースとして ESRI が提供している [ArcGIS REST JS](https://developers.arcgis.com/arcgis-rest-js/) を使ったルート検索アプリを作成します。
 
@@ -13,13 +13,13 @@ JavaScript を触ったことがない方や環境設定が特殊な方などは
 ## API キーの作成と設定
 始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
 
-「[開発者アカウントの作成](https://esrijapan.github.io/arcgis-dev-resources/guide/get-dev-account/)」と「[API キーの取得](https://esrijapan.github.io/arcgis-dev-resources/guide/get-api-key/)」を参照に作成を行ってください。
+「[開発者アカウントの作成](https://esrijapan.github.io/arcgis-dev-resources/guide/get-dev-account/)」と「[API キーの取得](https://esrijapan.github.io/arcgis-dev-resources/guide/get-api-key/)」を参照して作成を行ってください。
 
 「API キーの取得」が完了しましたら、以下の流れでロケーションサービスであるジオコーディングとルーティングを使用できるように設定します。
 
-1. 開発者アカウントにログインし、ダッシュボードから API キーの設定編集ページに移動する
+1. 開発者アカウントにログインし、ダッシュボードから API キーの設定編集ページに移動
 
-ダッシュボードから API キーの管理画面へ移動
+ダッシュボードから API キーの管理画面へ移動します。
 ![ダッシュボードからAPI キーの管理画面に移動します](../images/dashboard.png)
 
 API キーの管理画面。使用する API キーの Edit API Key をクリックし、API キーの設定編集ページへ。
@@ -27,10 +27,10 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 
 2. API キーで使用するロケーションサービスを設定
 
-ページ中部の Location services の欄から Configure services をクリック
+ページ中部の Location services の欄から Configure services をクリックします。
 ![編集ページの Configure services を選択](../images/config.png)
 
-この中から Geocoding (not stored) と Routing にチェック
+この中から Geocoding (not stored) と Routing にチェックします。
 ![使用するサービスをチェック](../images/location.png)
 
 ここまでで、使用するロケーションサービスが利用できるようになりましたので、ここからルート検索アプリを作成していきます。
@@ -108,6 +108,9 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 
 実際に地図の描画をした様子は以下の通りとなっています
 ![地図の描画のみをした場合](../images/map_only.png)
+
+ここまで、背景地図の描画で ESRI が提供する背景地図を使用しましたが、例に示している地図( Navigation )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照していただければと思います。
+また、 esri leaflet でベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)が用意されています。こちらを参考に目的にあった背景地図の選択をしてみていただければと思います。特に[カスタムしたベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)は、日本語表現の地図を表示することができます。
 
 ## 地名の検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
@@ -216,10 +219,15 @@ searchControl.on('results', function (data) {
 地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
 ![地名検索の結果表示](../images/geocode.gif)
 
+ここまで書いてきたコードは、[API リファレンス](https://esri.github.io/esri-leaflet/api-reference/controls/geosearch.html)と[サンプル](https://esri.github.io/esri-leaflet/examples/geocoding-control.html)を参考に作成していますのでそちらも参照していただければより理解が深まると思います。
+
+また、esri-leaflet-geocorder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、より多機能なルート検索などを作成したい方などはご参考にしていただければと思います。
+これらの機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しているのでこちらもご確認いただければ、より柔軟に多くの機能を付与できます。
+
 ## ルート検索の導入
 ルート検索を導入するために ArcGIS REST JS を参照します。ここでは、マップ上でクリックをするとマーカーが表示され、もう一度クリックした場所へのルート検索を実行するようなサンプルを作成しています。また、ルートまでの案内文も表示しています。
 
-1. index.html に ArcGIS REST JS を参照を追加。ルート案内のメッセージを記すために div 要素も追加
+1. index.html に ArcGIS REST JS の参照を追加。ルート案内のメッセージを記すために div 要素も追加
 
 ```HTML
 <html>
@@ -300,7 +308,7 @@ searchControl.on('results', function (data) {
 ```
 
 2. main.js にクリックした地点でルート検索を行う機能を追加
-
+    1. ルート検索の機能の追加
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -374,11 +382,11 @@ function addstoppoint(){
 
 // ルート検索の実行をする関数
 function searchRoute() {
-    // Create the arcgis-rest-js authentication object to use later.
+    // arcgis-rest-js を利用するための認証用の変数を用意します。
     const authentication = new arcgisRest.ApiKey({
       key: apiKey
     });
-    // make the API request
+    // ルート検索
     arcgisRest
       .solveRoute({
         stops: [startCoords, endCoords], 
@@ -412,8 +420,10 @@ map.on("click", (e) => {
 
 ```
 
-ルート検索の結果としては以下のようになります。
+地図上でクリックすると以下の画像のようにルート検索を実行し、結果を右上に表示します。
 ![クリックした地点同士でルート検索](../images/routing.gif)
+
+こちらは、[ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/routing/) を参照に作られています。
 
 ## 地名検索をルート検索に反映
 最後に地名検索をルート検索に反映させます。
@@ -607,12 +617,11 @@ map.on("click", (e) => {
   });
 ```
 
-これを実行することで、以下のように地名検索後、ルート検索を行うように表示されます。
-
+これを実行することで、以下のように地名検索後、ルート検索を行うようにされます。
 ![地名検索でルート検索地点を追加](../images/app.gif)
 
 ## Calcite Design Systemによるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
-Calcite Design System は、ESRI が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなアプリデザインを作成することができます。
+Calcite Design System は、ESRI が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んで作成することができます。今回は、[アコーディオンバーのコンポーネント]()といくつかの [icon]() を使用して、ルート検索の結果の表示の際のデザインを変更しました。
 
 ![Calcite Design System](../images/calcite.png)
