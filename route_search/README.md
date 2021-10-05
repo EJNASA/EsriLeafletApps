@@ -695,7 +695,9 @@ map.on("click", (e) => {
 地図上でクリックすると以下の動画のようにルート検索を実行し、結果を地図上に描画し、右上に始点から終点までのルート案内を表示します。
 ![クリックした地点同士でルート検索](../images/routing.gif)
 
-こちらは、[ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/routing/) を参照に作られています。
+シンプルなルート検索だけではなく、出発地点と時間の指定をすることで到達できる場所の領域を生成することができる[到達圏エリアの作成](https://developers.arcgis.com/esri-leaflet/route-and-directions/find-service-areas/)も可能です。
+
+こちらは、[ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/routing/) を参照しています。
 
 ## 地名検索をルート検索に反映
 最後に地名検索をルート検索に反映させます。
