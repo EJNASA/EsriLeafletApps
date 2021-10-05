@@ -423,7 +423,7 @@ const routeLines = L.layerGroup().addTo(map);
 let currentStep = "start"; 
 let startCoords, endCoords;
 
-// ルート検索をしたい地点を関数化
+// ルート検索をしたい始点終点を決めるための関数
 function addstoppoint(){
     if (currentStep === "start") {
       startLayerGroup.clearLayers(); 
@@ -507,7 +507,7 @@ const routeLines = L.layerGroup().addTo(map);
 let currentStep = "start"; 
 let startCoords, endCoords;
 
-// ルート検索をしたい地点を関数化
+// ルート検索をしたい始点終点を決めるための関数
 function addstoppoint(){
     if (currentStep === "start") {
       startLayerGroup.clearLayers(); 
@@ -526,8 +526,6 @@ function addstoppoint(){
       searchRoute(); // 始点と終点ができたらルート検索をかける
     }
 }
-
-// ルート検索に使う変数と始点終点を決めるための関数の追加終了
 
 // ルート検索の関数の追加開始
 
@@ -561,7 +559,7 @@ function searchRoute() {
       });
  }
 
-// 追加終了
+// ルート検索の関数の追加を終了
 
 ```
 関数 `searchRoute` では、初めに ArcGIS REST API を呼び出すために必要な API キーを ArcGIS REST JS で使用するために [arcgisRest.ApiKey](https://esri.github.io/arcgis-rest-js/api/auth/ApiKey/) で使用する API キーを指定します。そのあと、ルート検索を行う `arcgisRest.solveRoute` の設定をします。実行前に始点と終点を指定する必要があるため、 `startCoords` と `endCoords` の値が入力された後にルート検索を実行します。`arcgisRest.solveRoute` にはいくつか option が設定されていますが、今回使用している option の説明を以下に羅列します。
@@ -679,13 +677,15 @@ function searchRoute() {
       });
  }
 
+// 地図上をクリックした場所の位置情報をルート検索の始点もしくは終点に登録するメソッドを追加
+
  // クリックした場所の位置情報を返す
 map.on("click", (e) => {
     coordinates = e.latlng;
     addstoppoint();
   });
 
-// 追加終了
+// 地図上をクリックした場所の位置情報をルート検索の始点もしくは終点に登録するメソッドを追加の終了
 
 ```
 最後にルート検索を実行する方法として、`map.on` メソッドで地図上をクリックするとクリックした場所の情報を返すように指定します。その位置情報を `coordinates` に与えます。その後、関数 `addstopoint()` を起動して、ルート検索の始点終点を設定します。
