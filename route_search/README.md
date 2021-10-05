@@ -214,8 +214,8 @@ const searchControl = L.esri.Geocoding.geosearch({
 
 - position:検索バーと検索ボタンをどこに配置するかを指定します。デフォルトでは `topleft` を指定します。
 - placeholder:検索バー内に何を入力する場所かについての説明を記します。
-- useMapBounds:検索する縮尺範囲を指定します。デフォルトでは縮尺範囲 12 で検索をします。今回は、false に指定しています。
-- provideers:地名の検索時使用するプロバイダを指定します。今回は、arcGIS Online サーバーを使用しているので、API キーをセットして使用します。
+- useMapBounds:検索する縮尺範囲を指定します。デフォルトでは縮尺範囲 12 で検索をします。今回は false に指定し、全国で検索をかけます。
+- provideers:地名の検索時使用するプロバイダを指定します。今回は、ArcGIS Online サーバーを使用しているので、API キーをセットして使用します。
 
 これらの詳しい使い方、これ以外の option については、[API リファレンス](https://esri.github.io/esri-leaflet/api-reference/controls/geosearch.html)を参照してください。
 
@@ -274,13 +274,13 @@ searchControl.on('results', function (data) {
 
 先に検索したものをまとめて管理するためにポイント用のレイヤとして `searchlayers` を用意します。[`L.layer.Group()`](https://leafletjs.com/reference-1.7.1.html#layergroup) は、 Leaflet の関数で、Leaflet 上で扱えるレイヤを作成します。このレイヤは、地名検索の結果を入れておくレイヤになります。
 
-`searchControl.on` は、変数 `searchControl` に result の値が変更されたときに起動します。そのイベントが起動した時 `data.results` に値が入っていれば、変数 `coordinates` に `data.results` の一個目の値から `latlng`(位置情報) を取得します。その時、検索結果が地図上に反映されている場合その値を `.clearLayers()` で削除します。これによって地図上に検索した値が残らずに新しく検索した結果のみ表示することができます。 [`L.marker`](https://leafletjs.com/reference-1.7.1.html#marker) は、地図上に立てるピンを生成します。この値を `searchLayers` に追加することで地図上に検索した地点にピンを立てることができます。
+`searchControl.on` は、変数 `searchControl` の `results` の値が変更されたときに起動します。そのイベントが起動した時 `data.results` に値が入っていれば、変数 `coordinates` に `data.results` の一個目の値から `latlng`(位置情報) を取得します。その時、検索結果が地図上に反映されている場合その値を `.clearLayers()` で削除します。これによって地図上に検索した値が残らずに新しく検索した結果のみ表示することができます。 [`L.marker`](https://leafletjs.com/reference-1.7.1.html#marker) は、地図上に立てるピンを生成します。この値を `searchLayers` に追加することで地図上に検索した地点にピンを立てることができます。
 
 地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
 ![地名検索の結果表示](../images/geocode.gif)
 
-esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、より多機能なルート検索などを作成したい方などはご参考にしていただければと思います。
-これらの機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しているのでこちらもご確認いただければ、より柔軟に多くの機能を付与できます。
+esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、今回作成するルート検索アプリを発展させた多機能なルート検索などを作成したい方などはご参考にしていただければと思います。
+これらのジオコーディングに関する機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しています。
 
 ## ルート検索の導入
 ルート検索を導入するために ArcGIS REST JS を参照します。ここでは、マップ上でクリックをするとマーカーが表示され、もう一度クリックした場所へのルート検索を実行するようなサンプルを作成しています。また、ルートまでの案内文も表示しています。
