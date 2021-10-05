@@ -1,4 +1,4 @@
-const apiKey = "YOUR_API_KEY";
+//const apiKey = "YOUR_API_KEY";
 
 var vectorTiles = {};
 var allEnums = [
@@ -22,18 +22,6 @@ var allEnums = [
     'ArcGIS:Oceans',
     'ArcGIS:Oceans:Base',
     'ArcGIS:Oceans:Labels',
-    'OSM:Standard',
-    'OSM:StandardRelief',
-    'OSM:StandardRelief:Base',
-    'OSM:Streets',
-    'OSM:StreetsRelief',
-    'OSM:StreetsRelief:Base',
-    'OSM:LightGray',
-    'OSM:LightGray:Base',
-    'OSM:LightGray:Labels',
-    'OSM:DarkGray',
-    'OSM-DarkGray:Base',
-    'OSM-DarkGray:Labels',
     'ArcGIS:Terrain',
     'ArcGIS:Terrain:Base',
     'ArcGIS:Terrain:Detail',
@@ -47,7 +35,19 @@ var allEnums = [
     'ArcGIS:Midcentury',
     'ArcGIS:Newspaper',
     'ArcGIS:Hillshade:Light',
-    'ArcGIS:Hillshade:Dark'
+    'ArcGIS:Hillshade:Dark',
+    'OSM:Standard',
+    'OSM:StandardRelief',
+    'OSM:StandardRelief:Base',
+    'OSM:Streets',
+    'OSM:StreetsRelief',
+    'OSM:StreetsRelief:Base',
+    'OSM:LightGray',
+    'OSM:LightGray:Base',
+    'OSM:LightGray:Labels',
+    'OSM:DarkGray',
+    'OSM-DarkGray:Base',
+    'OSM-DarkGray:Labels'
   ];
 
   // the L.esri.Vector.vectorBasemapLayer basemap enum defaults to 'ArcGIS:Streets' if omitted
@@ -55,6 +55,13 @@ var allEnums = [
     apiKey
   });
   allEnums.forEach((enumString) => {
+    vectorTiles[
+      enumString
+    ] = L.esri.Vector.vectorBasemapLayer(enumString, {
+      apiKey
+    });
+  });
+  osmLayers.forEach((enumString) => {
     vectorTiles[
       enumString
     ] = L.esri.Vector.vectorBasemapLayer(enumString, {
