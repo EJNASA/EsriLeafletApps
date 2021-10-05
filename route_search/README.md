@@ -1,6 +1,6 @@
 # ルート検索アプリの作成
 [Leaflet](https://leafletjs.com/) は、メジャーで軽量なオープンソースのマッピング JavaScript ライブラリです。Leaflet は主に地図の表示や地図内に表示されるレイヤの処理などを得意としています。
-[Esri Leaflet](https://esri.github.io/esri-leaflet/) は、ESRI のロケーションサービスが使えるオープンソースの Leaflet プラグインとなっています。
+[Esri Leaflet](https://esri.github.io/esri-leaflet/) は、ESRI のロケーションサービスが使えるオープンソースの Leaflet のプラグインとなっています。
 
 今回は、Leaflet と Esri Leaflet 及び、同じくオープンソースとして ESRI が提供している [ArcGIS REST JS](https://developers.arcgis.com/arcgis-rest-js/) を使ったルート検索アプリを作成します。
 
