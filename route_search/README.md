@@ -553,7 +553,9 @@ function searchRoute() {
       // エラー時の表示
       .catch((error) => {
         console.error(error);
-        alert("ルート検索に失敗しました");
+        alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
+        startCoords = null; // エラー時にも始点、終点の位置情報をリセット
+        endCoords = null;
       });
  }
 
@@ -671,7 +673,9 @@ function searchRoute() {
       // エラー時の表示
       .catch((error) => {
         console.error(error);
-        alert("ルート検索に失敗しました");
+        alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
+        startCoords = null; // エラー時にも始点、終点の位置情報をリセット
+        endCoords = null;
       });
  }
 
@@ -874,7 +878,9 @@ function searchRoute() {
       // エラー時の表示
       .catch((error) => {
         console.error(error);
-        alert("ルート検索に失敗しました");
+        alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
+        startCoords = null; // エラー時にも始点、終点の位置情報をリセット
+        endCoords = null;
       });
  }
 
