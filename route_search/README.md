@@ -1,5 +1,5 @@
 # ルート検索アプリの作成
-[Leaflet](https://leafletjs.com/) は、メジャーで軽量なオープンソースのマッピング JavaScript ライブラリです。Leaflet は主に地図の表示や地図内に表示されるレイヤーの処理などを得意としています。
+[Leaflet](https://leafletjs.com/) は、メジャーで軽量なオープンソースのマッピング JavaScript ライブラリです。Leaflet は主に地図の表示や地図内に表示されるレイヤの処理などを得意としています。
 [Esri Leaflet](https://esri.github.io/esri-leaflet/) は、ESRI のロケーションサービスが使えるオープンソースの Leaflet プラグインとなっています。
 
 今回は、Leaflet と Esri Leaflet 及び、同じくオープンソースとして ESRI が提供している [ArcGIS REST JS](https://developers.arcgis.com/arcgis-rest-js/) を使ったルート検索アプリを作成します。
@@ -8,7 +8,7 @@ ArcGIS REST JS は、ESRI が提供している ArcGIS REST API の JavaScript �
 
 JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、自身の環境で行う方は、それぞれファイル名を index.html と main.js という形式で解説しているのでファイル名のご参考にしてくださればと思います。
 
-本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと思います。
+本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてくださればと思います。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、そちらも今後の開発のご参考にしていただければと幸いです。
 
 ## API キーの作成と設定
 始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
@@ -108,12 +108,12 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 
 Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを map という id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてくださればと思います。
 今回、日本国内でルート検索を行いたいと考えているため地図を表示する初期位置とズームレベルを指定する `.setView()` を map オブジェクトに付与します。
-次に使用するベースマップとして、ESRI の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector のモジュールである `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい ArcGIS:Navigation を選択しています。
+次に使用するベースマップとして、ESRI の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `ArcGIS:Navigation` を選択しています。
 
 実際に地図を描画した様子は、以下の通りとなっています。これは富士山を中心にして表示しています。
 ![地図の描画のみをした場合](../images/map_only.png)
 
-ここまで、ベースマップの描画で ESRI が提供するベースマップを使用しましたが、例に示している地図( ArcGIS:Navigation )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照していただければと思います。
+ここまで、ベースマップの描画で ESRI が提供するベースマップを使用しましたが、例に示しているベースマップ( `ArcGIS:Navigation` )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照していただければと思います。
 また、 esri leaflet でベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)が用意されています。こちらを参考に目的にあったベースマップの選択をしてみていただければと思います。特に[カスタムしたベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)は、日本語表現の地図を表示することができます。
 
 ## 地名の検索の導入
@@ -256,7 +256,7 @@ const searchControl = L.esri.Geocoding.geosearch({
 
 // 地名検索を行った後の動作を追加
 
-// 検索結果を入れるレイヤーの作成
+// 検索結果を入れるレイヤの作成
 let searchlayers=L.layerGroup().addTo(map);
 
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
@@ -272,7 +272,7 @@ searchControl.on('results', function (data) {
 
 ```
 
-先に検索したものをまとめて管理するためにポイント用のレイヤーとして `searchlayers` を用意します。[`L.layer.Group()`](https://leafletjs.com/reference-1.7.1.html#layergroup) は、 Leaflet の関数で、Leaflet 上で扱えるレイヤーを作成します。このレイヤーは、地名検索の結果を入れておくレイヤーになります。
+先に検索したものをまとめて管理するためにポイント用のレイヤとして `searchlayers` を用意します。[`L.layer.Group()`](https://leafletjs.com/reference-1.7.1.html#layergroup) は、 Leaflet の関数で、Leaflet 上で扱えるレイヤを作成します。このレイヤは、地名検索の結果を入れておくレイヤになります。
 
 `searchControl.on` は、変数 `searchControl` に result の値が変更されたときに起動します。そのイベントが起動した時 `data.results` に値が入っていれば、変数 `coordinates` に `data.results` の一個目の値から `latlng`(位置情報) を取得します。その時、検索結果が地図上に反映されている場合その値を `.clearLayers()` で削除します。これによって地図上に検索した値が残らずに新しく検索した結果のみ表示することができます。 [`L.marker`](https://leafletjs.com/reference-1.7.1.html#marker) は、地図上に立てるピンを生成します。この値を `searchLayers` に追加することで地図上に検索した地点にピンを立てることができます。
 
@@ -396,7 +396,7 @@ const searchControl = L.esri.Geocoding.geosearch({
     })]
 }).addTo(map);
 
-// 検索結果を入れるレイヤーの作成
+// 検索結果を入れるレイヤの作成
 let searchlayers=L.layerGroup().addTo(map);
 
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
@@ -415,7 +415,7 @@ searchControl.on('results', function (data) {
 // directions の要素を取得し、ルート案内を表示する
 const directions=document.getElementById("directions");
 
-// マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
+// マップ上の検索結果をリセットするために始点と終点、ルート案内のラインのレイヤグループを作成
 const startLayerGroup = L.layerGroup().addTo(map);
 const endLayerGroup = L.layerGroup().addTo(map);
 const routeLines = L.layerGroup().addTo(map);
@@ -429,17 +429,17 @@ function addstoppoint(){
       startLayerGroup.clearLayers(); 
       endLayerGroup.clearLayers(); 
       routeLines.clearLayers(); 
-      L.marker(coordinates).addTo(startLayerGroup); // スタート地点にマーカーを作成
+      L.marker(coordinates).addTo(startLayerGroup); // 始点にマーカーを作成
       startCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "end"; 
     } else {
-      L.marker(coordinates).addTo(endLayerGroup); // ゴール地点にマーカーを作成
+      L.marker(coordinates).addTo(endLayerGroup); // 終点にマーカーを作成
       endCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "start"; 
     }
   
     if (startCoords && endCoords) {
-      searchRoute(); // スタート地点とゴール地点ができたらルート検索をかける
+      searchRoute(); // 始点と終点ができたらルート検索をかける
     }
 }
 
@@ -447,7 +447,7 @@ function addstoppoint(){
 
 ```
 
-まず始めにルート検索に必要な始点と終点を設置するために変数と関数を作成します。ルート検索をしたあと、もう一度別のルート検索を行う際に以前の検索結果を削除するために始点情報を入れるレイヤ `startLayerGroup` 、終点情報を入れるレイヤ `endLayerGroup`、ルートラインのライン情報を入れる `routeLines` に `L.layerGroup()` で Layer オブジェクトを設定します。他にも設定するポイントが始点か終点かを判定するために使うフラグとして変数 `currentStep` を作成し、始点の位置情報として `startCoords` 、終点の位置情報として `endCoords` を用意します。
+まず始めにルート検索に必要な始点と終点を設置するために変数と関数を作成します。ルート検索をしたあと、もう一度別のルート検索を行う際に以前の検索結果を削除するために始点情報を入れるレイヤ `startLayerGroup` 、終点情報を入れるレイヤ `endLayerGroup`、ルートのライン情報を入れる `routeLines` に `L.layerGroup()` で Layer オブジェクトを設定します。他にも設定するポイントが始点か終点かを判定するために使うフラグとして変数 `currentStep` を作成し、始点の位置情報として `startCoords` 、終点の位置情報として `endCoords` を用意します。
 
 次にルート検索をしたい始点、終点の情報を作成する関数 `addstoppoint` を作成します。この関数では、ルート検索をかける前の位置情報の収納と始点終点の位置にピンを立てる役割を持たせます。また、始点終点の値に位置情報が設置されたらルート検索を行う条件分岐を用意します。次にルート検索を行う ArcGIS REST JS の `arcgisRest.solveRoute` を扱う関数 `searchRoute` を作成します。
 
@@ -480,7 +480,7 @@ const searchControl = L.esri.Geocoding.geosearch({
     })]
 }).addTo(map);
 
-// 検索結果を入れるレイヤーの作成
+// 検索結果を入れるレイヤの作成
 let searchlayers=L.layerGroup().addTo(map);
 
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
@@ -499,7 +499,7 @@ searchControl.on('results', function (data) {
 // directions の要素を取得し、ルート案内を表示する
 const directions=document.getElementById("directions");
 
-// マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
+// マップ上の検索結果をリセットするために始点と終点、ルート案内のラインのレイヤグループを作成
 const startLayerGroup = L.layerGroup().addTo(map);
 const endLayerGroup = L.layerGroup().addTo(map);
 const routeLines = L.layerGroup().addTo(map);
@@ -513,17 +513,17 @@ function addstoppoint(){
       startLayerGroup.clearLayers(); 
       endLayerGroup.clearLayers(); 
       routeLines.clearLayers(); 
-      L.marker(coordinates).addTo(startLayerGroup); // スタート地点にマーカーを作成
+      L.marker(coordinates).addTo(startLayerGroup); // 始点にマーカーを作成
       startCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "end"; 
     } else {
-      L.marker(coordinates).addTo(endLayerGroup); // ゴール地点にマーカーを作成
+      L.marker(coordinates).addTo(endLayerGroup); // 終点にマーカーを作成
       endCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "start"; 
     }
   
     if (startCoords && endCoords) {
-      searchRoute(); // スタート地点とゴール地点ができたらルート検索をかける
+      searchRoute(); // 始点と終点ができたらルート検索をかける
     }
 }
 
@@ -551,7 +551,7 @@ function searchRoute() {
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
-        startCoords = null; // 最後にスタート、ゴール地点の位置情報をリセット
+        startCoords = null; // 最後にスタート、終点の位置情報をリセット
         endCoords = null;
       })
       // エラー時の表示
@@ -573,7 +573,7 @@ function searchRoute() {
 
 この他の option に関しては [API リファレンス](https://esri.github.io/arcgis-rest-js/api/routing/solveRoute/)をご参考にしてくださればと思います。
 このルート検索の結果は、`respose` に入ります。これを `.then` メソッドで出力します。そこから [`L.geoJSON`](https://leafletjs.com/reference-1.7.1.html#geojson)で検索結果からルートのラインを描画します。そして、ルート案内の文章がある `response.direction` からルート案内の文章を取得し、その文章を `directionsHTML` に入れ、directions の id 属性が設定されている要素を持っている `directions` の文章を `.innnerHTML` で `directionsHTML` に書き換えます。そのあと、始点終点の位置情報をリセットし、次の検索にスムーズに移行できるようにします。
-また、`.catch` メソッドも用意し、結果が返ってこないときやエラーが起きた際に Web コンソールにエラー値を返し、アラートを表示するようにします。
+また、`.catch` メソッドも使用し、結果が返ってこないときやエラーが起きた際に Web コンソールにエラー値を返し、アラートを表示するようにします。
 
 ```JavaScript
 // API キーを入力
@@ -604,7 +604,7 @@ const searchControl = L.esri.Geocoding.geosearch({
     })]
 }).addTo(map);
 
-// 検索結果を入れるレイヤーの作成
+// 検索結果を入れるレイヤの作成
 let searchlayers=L.layerGroup().addTo(map);
 
 // 検索後の動作を指定。結果を地図上に描画。検索結果最上位を基本的に取得
@@ -621,7 +621,7 @@ searchControl.on('results', function (data) {
 // directions の要素を取得し、ルート案内を表示する
 const directions=document.getElementById("directions");
 
-// マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
+// マップ上の検索結果をリセットするために始点と終点、ルート案内のラインのレイヤグループを作成
 const startLayerGroup = L.layerGroup().addTo(map);
 const endLayerGroup = L.layerGroup().addTo(map);
 const routeLines = L.layerGroup().addTo(map);
@@ -635,17 +635,17 @@ function addstoppoint(){
       startLayerGroup.clearLayers(); 
       endLayerGroup.clearLayers(); 
       routeLines.clearLayers(); 
-      L.marker(coordinates).addTo(startLayerGroup); // スタート地点にマーカーを作成
+      L.marker(coordinates).addTo(startLayerGroup); // 始点にマーカーを作成
       startCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "end"; 
     } else {
-      L.marker(coordinates).addTo(endLayerGroup); // ゴール地点にマーカーを作成
+      L.marker(coordinates).addTo(endLayerGroup); // 終点にマーカーを作成
       endCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "start"; 
     }
   
     if (startCoords && endCoords) {
-      searchRoute(); // スタート地点とゴール地点ができたらルート検索をかける
+      searchRoute(); // 始点と終点ができたらルート検索をかける
     }
 }
 
@@ -669,7 +669,7 @@ function searchRoute() {
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
-        startCoords = null; // 最後にスタート、ゴール地点の位置情報をリセット
+        startCoords = null; // 最後にスタート、終点の位置情報をリセット
         endCoords = null;
       })
       // エラー時の表示
@@ -802,7 +802,7 @@ const searchControl = L.esri.Geocoding.geosearch({
 
 /*
 使用しなくてよいため削除
-// 検索結果を入れるレイヤーの作成
+// 検索結果を入れるレイヤの作成
 let searchlayers=L.layerGroup().addTo(map);
 */
   
@@ -822,7 +822,7 @@ searchControl.on('results', function (data) {
 
 /* ルート検索の機能 */
 
-// マップ上の検索結果をリセットするためにスタート地点とゴール地点、ルート案内のラインのレイヤーグループを作成
+// マップ上の検索結果をリセットするために始点と終点、ルート案内のラインのレイヤグループを作成
 const startLayerGroup = L.layerGroup().addTo(map);
 const endLayerGroup = L.layerGroup().addTo(map);
 const routeLines = L.layerGroup().addTo(map);
@@ -836,17 +836,17 @@ function addstoppoint(){
       startLayerGroup.clearLayers(); 
       endLayerGroup.clearLayers(); 
       routeLines.clearLayers(); 
-      L.marker(coordinates).addTo(startLayerGroup); // スタート地点にマーカーを作成
+      L.marker(coordinates).addTo(startLayerGroup); // 始点にマーカーを作成
       startCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "end"; 
     } else {
-      L.marker(coordinates).addTo(endLayerGroup); // ゴール地点にマーカーを作成
+      L.marker(coordinates).addTo(endLayerGroup); // 終点にマーカーを作成
       endCoords = [coordinates.lng,coordinates.lat]; 
       currentStep = "start"; 
     }
   
     if (startCoords && endCoords) {
-      searchRoute(); // スタート地点とゴール地点ができたらルート検索をかける
+      searchRoute(); // 始点と終点ができたらルート検索をかける
     }
 }
 
@@ -870,7 +870,7 @@ function searchRoute() {
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
-        startCoords = null; // 最後にスタート、ゴール地点の位置情報をリセット
+        startCoords = null; // 最後にスタート、終点の位置情報をリセット
         endCoords = null;
       })
       // エラー時の表示
@@ -893,6 +893,6 @@ map.on("click", (e) => {
 
 ## Calcite Design Systemによるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
-Calcite Design System は、ESRI が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んで作成することができます。今回は、[アコーディオンバーのコンポーネント]()といくつかの [icon]() を使用して、ルート検索の結果の表示の際のデザインを変更しました。
+Calcite Design System は、ESRI が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んで作成することができます。今回は、[アコーディオンメニューのコンポーネント](https://developers.arcgis.com/calcite-design-system/components/accordion/)といくつかの [アイコン](https://developers.arcgis.com/calcite-design-system/icons/)を使用して、ルート検索の結果の表示の際のデザインを変更しています。
 
 ![Calcite Design System](../images/calcite.png)
