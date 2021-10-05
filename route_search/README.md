@@ -119,8 +119,6 @@ Leaflet では、`L.map` でベースマップを反映する map オブジェ�
 ## 地名の検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
 
-JavaScript 部分のコードに関しては、二つに分けて説明しています。
-
 1. index.html に esri-leaflet-geocoder の参照を追加
 
 ```HTML
@@ -175,7 +173,7 @@ JavaScript 部分のコードに関しては、二つに分けて説明してい
 ```
 
 2. main.js に地名検索の機能を追加
-
+JavaScript 部分のコードに関しては、二つに分けて説明しています。
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -366,7 +364,7 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
 ```
 
 2. main.js にクリックした地点でルート検索を行う機能を追加
-
+JavaScript のコードは三つに分けて説明します。
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
