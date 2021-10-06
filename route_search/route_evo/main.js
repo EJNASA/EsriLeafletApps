@@ -29,13 +29,26 @@ const divIcon2 = L.divIcon({
   popupAnchor: [0, 0]
 });
 
+function layerclear(){
+  if(!startCoords && !endCoords){
+    startLayerGroup.clearLayers(); // 前のレイヤーがあったらクリアする
+    endLayerGroup.clearLayers(); // 前のレイヤーがあったらクリアする
+    routeLines.clearLayers(); // 前のレイヤーがあったらクリアする
+  }
+}
+
 // 住所、地名検索の関数
 function geocoder(step){ // currentStep の値を指定するために引数に指定
+  if(step==="start"){
+    placeholder="①始点";
+  }else{
+    placeholder="②終点";
+  }
   const searchControl = L.esri.Geocoding.geosearch({
     position: 'topright',
-    placeholder: '住所または場所の名前を入力',
+    placeholder: placeholder,
     title:'地名検索',
-    collapseAfterResult:false,
+    collapseAfterResult:false, // 閉じるか閉じないかの選択
     useMapBounds: false,
     providers: [L.esri.Geocoding.arcgisOnlineProvider({
       apikey: apiKey
@@ -54,20 +67,19 @@ return searchControl;
 
 function addtostoppoint(pointname){ // currentstep を引数に設定(optionの引数)
   if (currentStep === "start") {
-    startLayerGroup.clearLayers(); // 前のレイヤーがあったらクリアする
-    endLayerGroup.clearLayers(); // 前のレイヤーがあったらクリアする
-    routeLines.clearLayers(); // 前のレイヤーがあったらクリアする
+    layerclear();
     L.marker(coordinates,{icon:divIcon1}).addTo(startLayerGroup).bindPopup(pointname); // スタート地点にマーカーを作成
     startCoords = [coordinates.lng,coordinates.lat];
     startpoint=pointname;
     currentStep = "end";
   } else {
+    layerclear();
     L.marker(coordinates,{icon:divIcon2,popup:pointname}).addTo(endLayerGroup).bindPopup(pointname); // ゴール地点にマーカーを作成
     endCoords = [coordinates.lng,coordinates.lat]; 
     endpoint=pointname;
     currentStep = "start"; 
   }
-
+  console.log(map.hasLayer(startLayerGroup));
   if (startCoords && endCoords) {
     searchRoute(); // startとendができたらルート検索をかける
   }
@@ -103,7 +115,8 @@ const endLayerGroup = L.layerGroup().addTo(map);
 const routeLines = L.layerGroup().addTo(map);
 
 let currentStep = "start";
-let startCoords, startpoint, endCoords, endpoint;
+let startCoords, startpoint, endCoords, endpoint
+
 
 // ルート検索の関数
 function searchRoute() { 
@@ -121,8 +134,7 @@ function searchRoute() {
        })
        // 結果の表示
      .then((response) => {
-      console.log(response);
-       routeLines.clearLayers(); // 前作ったやつを消す
+      //console.log(response);
        geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
        const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
        directions.innerHTML = add_direction(directionsHTML,startpoint,endpoint);
@@ -142,13 +154,11 @@ function searchRoute() {
 start_search=geocoder("start");
 end_search=geocoder("end");
 
-input_el=document.getElementsByTagName("input");
-
 // 地名検索の検索ボタンの位置をアコーディオンメニュー内に入れる 
-end_container=end_search.getContainer();
-search.appendChild(end_container); 
 start_container=start_search.getContainer();
 search.appendChild(start_container); 
+end_container=end_search.getContainer();
+search.appendChild(end_container); 
 
 // 検索バーを開いている状態に設定する
 start_container.click();  
@@ -170,12 +180,12 @@ map.on("click", (e) => {
     }else{
       address=result.address["Match_addr"]
     }
-    addtostoppoint(address);
     if(currentStep=="start"){
       start_container.firstChild.value=address;
     }else{
       end_container.firstChild.value=address;
     }
+    addtostoppoint(address);
   })
   
 });

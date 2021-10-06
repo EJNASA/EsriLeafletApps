@@ -62,11 +62,14 @@
       background: white;
       font-family: Arial, Helvetica, Verdana;
       line-height: 1.5;
-      font-size: 14px;
       padding: 10px;
     }
     calcite-accordion {
       border-radius: 30px;
+    }
+    calcite-accordion-item{
+      /* background-color: aqua; */
+      height:30%;
     }
     input:focus {
       border: 1px solid blue;
@@ -98,11 +101,12 @@
   <calcite-accordion id="menu">
     <calcite-accordion-item icon="arrow-right-left" item-title="ルート検索"
       item-subtitle="住所または場所の名前を入力してルート検索ができます" active>
-      <div id="geocode"></div><br><br><br><br><br><br> 
+      <div id="geocode"></div>
+      <!-- <br><br><br><br><br><br>  -->
       <div id="direction">ルート検索結果</div>
     </calcite-accordion-item>    
 </calcite-accordion>
-
+<script type="text/javascript" src="../../api_key/api_key.js"></script>
 <script type="text/javascript" src="main.js"></script>
 </body>
 
