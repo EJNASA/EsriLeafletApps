@@ -108,7 +108,7 @@ L.esri.Vector.vectorBasemapLayer(basemapEnum, {
 
 Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを map という id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてくださればと思います。
 今回、日本国内でルート検索を行いたいと考えているため地図を表示する初期位置とズームレベルを指定する `.setView()` を map オブジェクトに付与します。
-次に使用するベースマップとして、Esri の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `OSM:Streets` を選択しています。
+次に使用するベースマップとして、Esri の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `OSM:Streets` を選択しています。このベースマップはオープンソースの Web 地図である [OpenStreetMap](https://openstreetmap.jp/#zoom=5&lat=38.06539&lon=139.04297&layers=B000) を基に Esri でベクタータイルにしたものになっています。
 
 実際に地図を描画した様子は、以下の通りとなっています。これは富士山を中心にして表示しています。
 ![地図の描画のみをした場合](../images/osm_map_only.png)
