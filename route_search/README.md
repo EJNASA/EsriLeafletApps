@@ -174,6 +174,7 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
 ```
 
 2. main.js に地名検索の機能を追加
+
 JavaScript 部分のコードに関しては、二つに分けて説明しています。
 ```JavaScript
 // API キーを入力
@@ -365,6 +366,8 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
 ```
 
 2. main.js にクリックした地点でルート検索を行う機能を追加
+
+
 JavaScript のコードは三つに分けて説明します。
 ```JavaScript
 // API キーを入力
