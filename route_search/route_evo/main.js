@@ -1,5 +1,5 @@
-//const apiKey="YOUR_API_KEY";
-const basemapEnum = "ArcGIS:Navigation";
+const apiKey="YOUR_API_KEY";
+const basemap = "ArcGIS:Navigation";
 
 // zoom control の位置を変えるために zoomControl には false を指定
 const map = L.map('map', {
@@ -7,10 +7,11 @@ const map = L.map('map', {
     zoomControl:false
 });
 
+// zoom のコントローラーを右上に指定
 L.control.zoom( { position: 'topright' } ).addTo( map );
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
@@ -29,18 +30,20 @@ const divIcon2 = L.divIcon({
   popupAnchor: [0, 0]
 });
 
+// 始点終点の位置情報がない場合 layergroup のレイヤーのリセットの実行する関数
 function layerclear(){
   if(!startCoords && !endCoords){
-    startLayerGroup.clearLayers(); // 前のレイヤーがあったらクリアする
-    endLayerGroup.clearLayers(); // 前のレイヤーがあったらクリアする
-    routeLines.clearLayers(); // 前のレイヤーがあったらクリアする
+    startLayerGroup.clearLayers(); 
+    endLayerGroup.clearLayers(); 
+    routeLines.clearLayers(); 
   }
 }
 
 // 住所、地名検索の関数
 function geocoder(step){ // currentStep の値を指定するために引数に指定
+  // placeholder の中身を始点と終点で変更する
   if(step==="start"){
-    placeholder="①始点";
+    placeholder="①始点"; 
   }else{
     placeholder="②終点";
   }
@@ -48,7 +51,7 @@ function geocoder(step){ // currentStep の値を指定するために引数に�
     position: 'topright',
     placeholder: placeholder,
     title:'地名検索',
-    collapseAfterResult:false, // 閉じるか閉じないかの選択
+    collapseAfterResult:false, // 検索バーを閉じないように設定
     useMapBounds: false,
     providers: [L.esri.Geocoding.arcgisOnlineProvider({
       apikey: apiKey
@@ -60,12 +63,13 @@ function geocoder(step){ // currentStep の値を指定するために引数に�
   if(data.results){
     coordinates = data.results[0].latlng;
     addtostoppoint(data.results[0].text);
-  }    
+  }
   });
 return searchControl;
 }
 
-function addtostoppoint(pointname){ // currentstep を引数に設定(optionの引数)
+// ルート検索をしたい始点終点を決めるための関数
+function addtostoppoint(pointname){ // 場所の名前を引数に設定
   if (currentStep === "start") {
     layerclear();
     L.marker(coordinates,{icon:divIcon1}).addTo(startLayerGroup).bindPopup(pointname); // スタート地点にマーカーを作成
@@ -86,7 +90,7 @@ function addtostoppoint(pointname){ // currentstep を引数に設定(optionの�
  }
 
  // ルート案内の文章に calcite-icon を指定するための関数
- function add_direction(str,startpoint,endpoint){
+ function add_direction(str,startpoint,endpoint){ // str: ルート案内の文章, startpoint: スタート地点の場所名, endpoint: ゴール地点の場所名
   str=str.replace("Location 1",startpoint);
   str=str.replace("Location 2",endpoint);
   str_split=str.split("<br>");
@@ -104,6 +108,7 @@ function addtostoppoint(pointname){ // currentstep を引数に設定(optionの�
   return direction;
 }
 
+// 設定されている id の要素を取得
 const search=document.getElementById("geocode");
 const directions=document.getElementById("direction");
 
@@ -134,7 +139,6 @@ function searchRoute() {
        })
        // 結果の表示
      .then((response) => {
-      //console.log(response);
        geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
        const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
        directions.innerHTML = add_direction(directionsHTML,startpoint,endpoint);
@@ -164,11 +168,11 @@ search.appendChild(end_container);
 start_container.click();  
 end_container.click();
 
-var geocodeService = L.esri.Geocoding.geocodeService({
+const geocodeService = L.esri.Geocoding.geocodeService({
   apikey: apiKey 
 });
 
-// クリックした場所の位置情報を返し、reverce geocoding を実行
+// クリックした場所の位置情報を返し、reverce geocoding を実行し、地名を取得。
 map.on("click", (e) => {
   coordinates = e.latlng;
   geocodeService.reverse().latlng(coordinates).run(function (error, result) {
@@ -196,4 +200,5 @@ map.on("load",function() {
   loading.removeAttribute("active");
 });
 
+// 初期位置を富士山の上空に指定
 map.setView([35.362752, 138.729858], 12);
