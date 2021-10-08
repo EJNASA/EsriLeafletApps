@@ -59,10 +59,10 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
             crossorigin=""></script>
 
         <!-- CDN から esri-Leaflet の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"></script>
 
         <!-- Esri のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+        <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js"></script>
         <style>
             body { margin:0; padding:0; }
             #map {
@@ -90,7 +90,7 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // ベースマップの追加 
 
@@ -100,7 +100,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
@@ -139,10 +139,10 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
             crossorigin=""></script>
 
         <!-- CDN から esri-Leaflet の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"></script>
 
         <!-- Esri のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+        <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js"></script>
 
         <!-- esri-Leaflet-geocoder への参照を追加 -->
         
@@ -179,7 +179,7 @@ JavaScript 部分のコードに関しては、二つに分けて説明してい
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // ベースマップの追加 
 
@@ -189,7 +189,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
@@ -224,7 +224,7 @@ const searchControl = L.esri.Geocoding.geosearch({
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // ベースマップの追加 
 
@@ -234,7 +234,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
@@ -304,10 +304,10 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
             crossorigin=""></script>
 
         <!-- CDN から esri-Leaflet の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"></script>
 
         <!-- Esri のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
-        <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+        <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js"></script>
         
         <!-- CDN から esri-Leaflet-geocoder の css と js を取得 -->
         <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
@@ -372,7 +372,7 @@ JavaScript のコードは三つに分けて説明します。
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
@@ -382,7 +382,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map); 
 
@@ -456,7 +456,7 @@ function addstoppoint(){
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
@@ -466,7 +466,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map); 
 
@@ -580,7 +580,7 @@ function searchRoute() {
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
@@ -590,7 +590,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map); 
 
@@ -725,10 +725,10 @@ map.on("click", (e) => {
   crossorigin=""></script>
 
   <!-- CDN から esri-Leaflet の js を取得 -->
-  <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"></script>
 
   <!-- Esri のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
-  <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+  <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js"></script>
 
    <!-- CDN から esri-Leaflet-geocoder の css と js を取得 -->
    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
@@ -782,7 +782,7 @@ map.on("click", (e) => {
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "OSM:Streets";
+const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
@@ -792,7 +792,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
