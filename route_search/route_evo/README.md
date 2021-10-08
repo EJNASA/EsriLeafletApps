@@ -10,7 +10,7 @@
 - [leaflet](https://leafletjs.com/)
     - [`L.control.zoom`](https://leafletjs.com/reference-1.7.1.html#control-zoom): zoom ボタンの設定ができます。ボタンの位置を変えるために使用しています。
     - [`L.divIcon`](https://leafletjs.com/reference-1.7.1.html#divicon):アイコンを画像ではなく、`div` 要素で作成します。ルートの始点終点のアイコンを使用するために使っています。
-    - [`.getContainer()`]: leaflet 上で動作するオブジェクトの HTML 要素を取得します。検索バーをメニューバー内の子要素として入れるために使用しています。 
+    - `.getContainer()`: leaflet 上で動作するオブジェクトの HTML 要素を取得します。検索バーをメニューバー内の子要素として入れるために使用しています。 
 
 - [esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector)
     - `ArcGIS:Navigation`: Esri が提供している道路の見やすいベクタータイル ベースマップです。
