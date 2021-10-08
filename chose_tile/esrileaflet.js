@@ -61,13 +61,6 @@ var allEnums = [
       apiKey
     });
   });
-  osmLayers.forEach((enumString) => {
-    vectorTiles[
-      enumString
-    ] = L.esri.Vector.vectorBasemapLayer(enumString, {
-      apiKey
-    });
-  });
 
   const map = L.map('map', {
     minZoom: 2
