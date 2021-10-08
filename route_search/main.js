@@ -1,6 +1,6 @@
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemapEnum = "ArcGIS:Navigation";
+const basemap = "ArcGIS:Navigation";
 
 // 地図の描画設定
 
@@ -10,7 +10,7 @@ const map = L.map('map', {
 }).setView([35.362752, 138.729858], 12);
 
 // Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
