@@ -20,10 +20,10 @@
    crossorigin=""></script>
  
    <!-- CDN から esri-Leaflet の js を取得 -->
-   <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+   <script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"></script>
  
    <!-- ESRI のベクタータイルを使用するため CDN から esri-Leaflet-vector の js を取得 -->
-   <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+   <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js"></script>
  
     <!-- CDN から esri-Leaflet-geocoder の css と js を取得 -->
     <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
@@ -51,6 +51,7 @@
         color: #323232;
         z-index:0;
       }
+      /* calcite-accordion の位置を決める */
       #menu {
       position: absolute;
       z-index: 1000;
@@ -63,14 +64,17 @@
       font-family: Arial, Helvetica, Verdana;
       line-height: 1.5;
       padding: 10px;
-    }
-    calcite-accordion {
       border-radius: 30px;
     }
+    /* calcite-accordion の高さを決める */
     calcite-accordion-item{
-      /* background-color: aqua; */
       height:30%;
     }
+    /* 検索バーとルート案内の結果の表示との間を設定 */
+    #geocode{
+      padding-bottom: 30%;
+    }
+    /* 検索バーの設定 */
     input:focus {
       border: 1px solid blue;
     }
@@ -82,12 +86,10 @@
       border-radius: 30px;
       box-shadow: none;
     }
+    /* icon のデザイン */
     .divicon{
       background-color: azure;
       border-radius: 10px;
-    }
-    #direction{
-      margin-top: 5%;
     }
   </style>
 
@@ -98,15 +100,14 @@
   <div id="map"></div>
   <!-- マップの読み込みができるまで表示されるローダー -->
   <calcite-loader active text="マップ読み込み中"></calcite-loader>
+  <!-- アコーディオンメニューの追加 -->
   <calcite-accordion id="menu">
     <calcite-accordion-item icon="arrow-right-left" item-title="ルート検索"
       item-subtitle="住所または場所の名前を入力してルート検索ができます" active>
       <div id="geocode"></div>
-      <!-- <br><br><br><br><br><br>  -->
       <div id="direction">ルート検索結果</div>
-    </calcite-accordion-item>    
+    </calcite-accordion-item> 
 </calcite-accordion>
-<script type="text/javascript" src="../../api_key/api_key.js"></script>
 <script type="text/javascript" src="main.js"></script>
 </body>
 
