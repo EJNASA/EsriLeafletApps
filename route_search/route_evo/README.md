@@ -5,7 +5,7 @@
 - [Calcite Design System](https://developers.arcgis.com/calcite-design-system/)
     - [calcite-loader](https://developers.arcgis.com/calcite-design-system/components/loader/):`map` オブジェクトがロードされるまで表示されるローダーとして使用しています。
     - [calcite-accordion](https://developers.arcgis.com/calcite-design-system/components/accordion/):検索バーと結果を表示するメニューバーとして使用しています。
-    - [icons](https://developers.arcgis.com/calcite-design-system/icons/):ルート案内文をアイコンでアイコンでわかりやすく補完しています。また、ルートの始点終点のアイコンにも使っています。
+    - [icons](https://developers.arcgis.com/calcite-design-system/icons/):ルート案内文を図も用いてわかりやすく補完するために使用しています。また、ルートの始点終点のアイコンにも使っています。
 
 - [leaflet](https://leafletjs.com/)
     - [`L.control.zoom`](https://leafletjs.com/reference-1.7.1.html#control-zoom): zoom ボタンの設定ができます。ボタンの位置を変えるために使用しています。
