@@ -6,7 +6,7 @@
 
 ArcGIS REST JS は、Esri が提供している ArcGIS REST API の JavaScript ベースのラッパーです。今回は、こちらを使用することでルート検索を実装していきます。 
 
-JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、Visual Studio Code を使用するなど自身の環境で行う方は、本ハンズオンでは、index.html と main.js という形式で解説していますので、同じ形式で進めていただければと思います。
+JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、Visual Studio Code を使用するなど自身の環境で行う方は、本ハンズオンでは、index.html と main.js という形式で解説していますので、同じ形式で進めていただければと思います。その際には、[過去のハンズオン](https://github.com/EsriJapan/workshops/tree/master/20200825_app-development-hands-on/Environment#2-%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83)での環境設定も参考にしてください。
 
 本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてください。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、今後の開発の参考にしてください。
 
@@ -28,7 +28,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 2. API キーで使用するロケーションサービスを設定
 
 ページ中部の Location services の欄から Configure services をクリックします。
-![編集ページの Configure services を選択](../images/config.png)
+![編集ページの Configure services を選択](../images/config.)
 
 この中から Geocoding (not stored) と Routing にチェックします。
 ![使用するサービスをチェック](../images/location.png)
@@ -48,7 +48,7 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Esri Leaflet</title>
+        <title>ルート検索アプリ</title>
 
         <!-- CDN から Leaflet の css と JS を取得 -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -74,8 +74,7 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
             }
         </style>
 
-    </head>
-
+   </head>
     <body>
         <div id="map"></div>
         <script type="text/javascript" src="main.js"></script>
@@ -94,10 +93,10 @@ const basemap = "OSM:Streets";
 
 // ベースマップの追加 
 
-// マップを描画する場所を富士山上空に指定
+// マップを描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
@@ -118,7 +117,7 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
 [カスタムのベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)の表示なども可能ですのでぜひご覧ください。
 
 ## 地名の検索の導入
-今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
+今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。JavaScript に関しては、少し煩雑になるため二段階に分けて解説します。
 
 1. index.html に esri-leaflet-geocoder の参照を追加
 
@@ -128,7 +127,7 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Esri Leaflet</title>
+        <title>ルート検索アプリ</title>
 
         <!-- CDN から Leaflet の css と JS を取得 -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -173,9 +172,9 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
 </html>
 ```
 
-2. main.js に地名検索の機能を追加
+2. main.js に地名検索の機能の実装
 
-JavaScript 部分のコードに関しては、二つに分けて説明しています。
+#### 2-1.  地名検索を行う機能を実装
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -183,10 +182,10 @@ const basemap = "OSM:Streets";
 
 // ベースマップの追加 
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
@@ -221,6 +220,7 @@ const searchControl = L.esri.Geocoding.geosearch({
 
 しかし、このままでは地名の検索を行っただけですので、結果を地図上に反映することが出来ません。そのため次に地名検索を行った後に地図上に結果を反映させます。
 
+#### 2-2. 地名検索を実行した後、マーカーを作成
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -228,10 +228,10 @@ const basemap = "OSM:Streets";
 
 // ベースマップの追加 
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
@@ -293,7 +293,7 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Esri Leaflet</title>
+        <title>ルート検索アプリ</title>
 
         <!-- CDN から Leaflet の css と JS を取得 -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -365,10 +365,12 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
 </html>
 ```
 
-2. main.js にクリックした地点でルート検索を行う機能を追加
+2. main.js にクリックした地点でルート検索を行う機能を実装
 
 
 JavaScript のコードは三つに分けて説明します。
+#### 3-1. ルート検索に必要な値を作成する関数を用意
+
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -376,10 +378,10 @@ const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
@@ -453,6 +455,8 @@ function addstoppoint(){
 
 次にルート検索をしたい始点、終点の情報を作成する関数 `addstoppoint` を作成します。この関数では、ルート検索をかける前の位置情報の収納と始点終点の位置にピンを立てる役割を持たせます。また、始点終点の値に位置情報が設置されたらルート検索を行う条件分岐を用意します。次にルート検索を行う ArcGIS REST JS の `arcgisRest.solveRoute` を扱う関数 `searchRoute` を作成します。
 
+#### 3-2. ルート検索を行う関数を実装
+
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -460,10 +464,10 @@ const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
@@ -577,6 +581,7 @@ function searchRoute() {
 このルート検索の結果は、`respose` に入ります。これを `.then` メソッドで出力します。そこから [`L.geoJSON`](https://leafletjs.com/reference-1.7.1.html#geojson)で検索結果からルートのラインを描画します。そして、ルート案内の文章がある `response.direction` からルート案内の文章を取得し、その文章を `directionsHTML` に入れ、directions の id 属性が設定されている要素を持っている `directions` の文章を `.innnerHTML` で `directionsHTML` に書き換えます。そのあと、始点終点の位置情報をリセットし、次の検索にスムーズに移行できるようにします。
 また、`.catch` メソッドも使用し、結果が返ってこないときやエラーが起きた際に Web コンソールにエラー値を返し、アラートを表示するようにします。
 
+#### 3-3. クリックした地点の間でルート検索を実行
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -584,10 +589,10 @@ const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
@@ -714,7 +719,7 @@ map.on("click", (e) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Esri Leaflet</title>
+  <title>ルート検索アプリ</title>
 
   <!-- CDN から Leaflet の css と JS を取得 -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -786,10 +791,10 @@ const basemap = "OSM:Streets";
 
 // 地図の描画設定
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
