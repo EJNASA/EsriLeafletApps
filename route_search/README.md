@@ -39,7 +39,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 ## 地図の描画
 まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。この時、参照するリンクは leaflet.js と Esri Lealfet と Esri が提供しているベースマップを表示するために [esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector) を参照します。
 
-1. HTML 
+### 1. HTML 
 Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 
 ```HTML
@@ -83,7 +83,7 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 </html>
 ```
 
-2. Javascript 
+### 2. Javascript 
 地図を描画するための main.js を作成します。
 
 ```JavaScript
@@ -119,7 +119,7 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
 ## 地名の検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。JavaScript に関しては、少し煩雑になるため二段階に分けて解説します。
 
-1. index.html に esri-leaflet-geocoder の参照を追加
+### 1. index.html に esri-leaflet-geocoder の参照を追加
 
 ```HTML
 <html>
@@ -172,7 +172,7 @@ Esri Leaflet でもベクタータイル ベースマップを選択する[サ�
 </html>
 ```
 
-2. main.js に地名検索の機能の実装
+### 2. main.js に地名検索の機能の実装
 
 #### 2-1.  地名検索を行う機能を実装
 ```JavaScript
@@ -285,7 +285,7 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
 ## ルート検索の導入
 ルート検索を導入するために ArcGIS REST JS を参照します。ここでは、マップ上でクリックをするとマーカーが表示され、もう一度クリックした場所へのルート検索を実行するようなサンプルを作成しています。また、ルートまでの案内文も表示しています。
 
-1. index.html に ArcGIS REST JS の参照を追加。ルート案内のメッセージを記すために div 要素も追加
+### 1. index.html に ArcGIS REST JS の参照を追加。ルート案内のメッセージを記すために div 要素も追加
 
 ```HTML
 <html>
@@ -365,11 +365,11 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
 </html>
 ```
 
-2. main.js にクリックした地点でルート検索を行う機能を実装
+### 2. main.js にクリックした地点でルート検索を行う機能を実装
 
 
 JavaScript のコードは三つに分けて説明します。
-#### 3-1. ルート検索に必要な値を作成する関数を用意
+#### 2-1. ルート検索に必要な値を作成する関数を用意
 
 ```JavaScript
 // API キーを入力
@@ -455,7 +455,7 @@ function addstoppoint(){
 
 次にルート検索をしたい始点、終点の情報を作成する関数 `addstoppoint` を作成します。この関数では、ルート検索をかける前の位置情報の収納と始点終点の位置にピンを立てる役割を持たせます。また、始点終点の値に位置情報が設置されたらルート検索を行う条件分岐を用意します。次にルート検索を行う ArcGIS REST JS の `arcgisRest.solveRoute` を扱う関数 `searchRoute` を作成します。
 
-#### 3-2. ルート検索を行う関数を実装
+#### 2-2. ルート検索を行う関数を実装
 
 ```JavaScript
 // API キーを入力
@@ -581,7 +581,7 @@ function searchRoute() {
 このルート検索の結果は、`respose` に入ります。これを `.then` メソッドで出力します。そこから [`L.geoJSON`](https://leafletjs.com/reference-1.7.1.html#geojson)で検索結果からルートのラインを描画します。そして、ルート案内の文章がある `response.direction` からルート案内の文章を取得し、その文章を `directionsHTML` に入れ、directions の id 属性が設定されている要素を持っている `directions` の文章を `.innnerHTML` で `directionsHTML` に書き換えます。そのあと、始点終点の位置情報をリセットし、次の検索にスムーズに移行できるようにします。
 また、`.catch` メソッドも使用し、結果が返ってこないときやエラーが起きた際に Web コンソールにエラー値を返し、アラートを表示するようにします。
 
-#### 3-3. クリックした地点の間でルート検索を実行
+#### 2-3. クリックした地点の間でルート検索を実行
 ```JavaScript
 // API キーを入力
 const apiKey="YOUR_API_KEY";
@@ -711,7 +711,7 @@ map.on("click", (e) => {
 ## 地名検索をルート検索に反映
 最後に地名検索をルート検索に反映させます。
 
-1. 地名検索後、ルート検索の機能が動作するように設定
+### 1. 地名検索後、ルート検索の機能が動作するように設定
 
 ```HTML
 <html>
