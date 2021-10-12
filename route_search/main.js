@@ -7,7 +7,7 @@ const basemap = "ArcGIS:Navigation";
 // 地図を描画する場所を富士山上空に指定
 const map = L.map('map', {
     minZoom: 2
-}).setView([35.362752, 138.729858], 12);
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // Esri のベクタータイルをベースマップに設定
 L.esri.Vector.vectorBasemapLayer(basemap, {
