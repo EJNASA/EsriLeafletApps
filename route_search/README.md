@@ -28,7 +28,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 2. API キーで使用するロケーションサービスを設定
 
 ページ中部の Location services の欄から Configure services をクリックします。
-![編集ページの Configure services を選択](../images/config.)
+![編集ページの Configure services を選択](../images/config.jpg)
 
 この中から Geocoding (not stored) と Routing にチェックします。
 ![使用するサービスをチェック](../images/location.png)
