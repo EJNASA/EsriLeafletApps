@@ -200,5 +200,6 @@ map.on("load",function() {
   loading.removeAttribute("active");
 });
 
-// 初期位置を富士山の上空に指定
-map.setView([35.362752, 138.729858], 12);
+// 初期位置を東京駅の上空に指定
+map.setView([35.68109305881504, 139.76717512821057], 14);
+
