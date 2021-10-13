@@ -8,7 +8,7 @@ ArcGIS REST JS は、Esri が提供している ArcGIS REST API の JavaScript �
 
 JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、Visual Studio Code を使用するなど自身の環境で行う方は、本ハンズオンでは、index.html と main.js という形式で解説していますので、同じ形式で進めていただければと思います。その際には、[過去のハンズオン](https://github.com/EsriJapan/workshops/tree/master/20200825_app-development-hands-on/Environment#2-%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83)での環境設定も参考にしてください。
 
-本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてください。また、本リポジトリにある [route_evo フォルダ](./route_evo)には発展形としてご紹介するソースコードが用意されていますので、今後の開発の参考にしてください。
+本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてください。また、本リポジトリにある [calcite_design](./calcite_design) には発展形としてご紹介するソースコードが用意されていますので、今後の開発の参考にしてください。
 
 ## 1. API キーの作成と設定
 始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
@@ -563,7 +563,6 @@ function searchRoute() {
         })
         // 結果の表示
       .then((response) => {
-        routeLines.clearLayers(); // 前回の結果をリセット
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
@@ -690,7 +689,6 @@ function searchRoute() {
         })
         // 結果の表示
       .then((response) => {
-        routeLines.clearLayers(); // 前回の結果をリセット
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
@@ -908,7 +906,6 @@ function searchRoute() {
         })
         // 結果の表示
       .then((response) => {
-        routeLines.clearLayers(); // 前回の結果をリセット
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
@@ -940,6 +937,6 @@ map.on("click", (e) => {
 
 ## 6. Calcite Design Systemによるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
-Calcite Design System は、Esri が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んで作成することができます。今回は、[アコーディオンメニューのコンポーネント](https://developers.arcgis.com/calcite-design-system/components/accordion/)といくつかの [アイコン](https://developers.arcgis.com/calcite-design-system/icons/)を使用して、ルート検索結果の表示方法を変更しています。ここで使用している機能の詳細については、同リポジトリ内にある[route_evo](./route_evo)をご参照ください。
+Calcite Design System は、Esri が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んで作成することができます。今回は、[アコーディオンメニューのコンポーネント](https://developers.arcgis.com/calcite-design-system/components/accordion/)といくつかの [アイコン](https://developers.arcgis.com/calcite-design-system/icons/)を使用して、ルート検索結果の表示方法を変更しています。ここで使用している機能の詳細については、同リポジトリ内にある[calcite_design](./calcite_design)をご参照ください。
 
 ![Calcite Design System](../images/calcite.png)

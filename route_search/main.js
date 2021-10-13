@@ -4,7 +4,7 @@ const basemap = "ArcGIS:Navigation";
 
 // 地図の描画設定
 
-// 地図を描画する場所を富士山上空に指定
+// 地図を描画する場所を東京駅上空に指定
 const map = L.map('map', {
     minZoom: 2
 }).setView([35.68109305881504, 139.76717512821057], 14);
@@ -80,7 +80,6 @@ function searchRoute() {
         })
         // 結果の表示
       .then((response) => {
-        routeLines.clearLayers(); // 前回の結果をリセット
         L.geoJSON(response.routes.geoJson).addTo(routeLines); 
         const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br/>");
         directions.innerHTML = directionsHTML;
@@ -91,6 +90,8 @@ function searchRoute() {
       .catch((error) => {
         console.error(error);
         alert("ルート検索に失敗しました");
+        startCoords = null; // 最後にスタート、ゴール地点の位置情報をリセット
+        endCoords = null;
       });
  }
 
