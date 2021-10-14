@@ -39,7 +39,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 ## 2.地図の描画
 まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。この時、参照するリンクは leaflet.js と Esri Lealfet と Esri が提供しているベースマップを表示するために [esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector) を参照します。
 
-### 2-1. HTML 
+### 2-1. index.html をライブラリの参照も含んで作成する
 Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 
 ```HTML
@@ -85,7 +85,7 @@ Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
 </html>
 ```
 
-### 2-2. Javascript 
+### 2-2. main.js に指定の地図を描画する機能を実装 
 地図を描画するための main.js を作成します。
 
 ```JavaScript
@@ -107,11 +107,11 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 
 ```
 
-Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを map という id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてくださればと思います。
-今回、日本国内でルート検索を行いたいと考えているため地図を表示する初期位置とズームレベルを指定する `.setView()` を map オブジェクトに付与します。
-次に使用するベースマップとして、Esri の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `OSM:Streets` を選択しています。このベースマップはオープンソースの Web 地図である [OpenStreetMap](https://openstreetmap.jp/#zoom=5&lat=38.06539&lon=139.04297&layers=B000) を基に Esri でベクタータイルにしたものになっています。
+Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを `map` の id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてくださればと思います。
+今回、日本国内でルート検索を行いたいと考えているため地図を表示する初期位置とズームレベルを指定する `.setView()` メソッドを map オブジェクトに付与します。
+次に使用するベースマップとして、Esri の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `OSM:Streets` を選択しています。このベースマップはオープンソースの Web 地図である [OpenStreetMap](https://openstreetmap.jp/#zoom=5&lat=38.06539&lon=139.04297&layers=B000) を基に Esri がベクタータイルにしたものになっています。
 
-実際に地図を描画した様子は、以下の通りとなっています。これは富士山を中心にして表示しています。
+実際に地図を描画した様子は、以下の通りとなっています。これは東京駅を中心にして表示しています。
 ![地図の描画のみをした場合](../images/map_only_tokyo.png)
 
 ここまで、ベースマップの描画で Esri が提供するベースマップを使用しましたが、例に示しているベースマップ( `OSM:Streets` )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照してください。
