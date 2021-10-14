@@ -112,7 +112,7 @@ Leaflet では、`L.map` でベースマップを反映する map オブジェ�
 次に使用するベースマップとして、Esri の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `OSM:Streets` を選択しています。このベースマップはオープンソースの Web 地図である [OpenStreetMap](https://openstreetmap.jp/#zoom=5&lat=38.06539&lon=139.04297&layers=B000) を基に Esri でベクタータイルにしたものになっています。
 
 実際に地図を描画した様子は、以下の通りとなっています。これは富士山を中心にして表示しています。
-![地図の描画のみをした場合](../images/osm_map_only.png)
+![地図の描画のみをした場合](../images/map_only_tokyo.png)
 
 ここまで、ベースマップの描画で Esri が提供するベースマップを使用しましたが、例に示しているベースマップ( `OSM:Streets` )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照してください。
 Esri Leaflet でもベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)などが用意されています。こちらは、目的にあったベースマップの選択が可能です。また、
@@ -284,7 +284,7 @@ searchControl.on('results', function (data) {
 `searchControl.on` は、変数 `searchControl` の `results` の値が変更されたときに起動します。そのイベントが起動した時 `data.results` に値が入っていれば、変数 `coordinates` に `data.results` の一個目の値から `latlng`(位置情報) を取得します。その時、検索結果が地図上に反映されている場合その値を `.clearLayers()` で削除します。これによって地図上に検索した値が残らずに新しく検索した結果のみ表示することができます。 [`L.marker`](https://leafletjs.com/reference-1.7.1.html#marker) は、地図上に立てるピンを生成します。この値を `searchLayers` に追加することで地図上に検索した地点にピンを立てることができます。
 
 地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
-![地名検索の結果表示](../images/osm_geocode.gif)
+![地名検索の結果表示](../images/geocode_tokyo.gif)
 
 esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、今回作成するルート検索アプリを発展させた多機能なルート検索などを作成したい方は、参考にしてください。
 これらのジオコーディングに関する機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しています。
@@ -718,7 +718,7 @@ map.on("click", (e) => {
 最後にルート検索を実行する方法として、`map.on` メソッドで地図上をクリックするとクリックした場所の情報を返すように指定します。その位置情報を `coordinates` に与えます。その後、関数 `addstopoint()` を起動して、ルート検索の始点終点を設定します。
 
 地図上でクリックすると以下の動画のようにルート検索を実行し、結果を地図上に描画し、右上に始点から終点までのルート案内を表示します。
-![クリックした地点同士でルート検索](../images/osm_routing.gif)
+![クリックした地点同士でルート検索](../images/routing_tokyo.gif)
 
 シンプルなルート検索だけではなく、出発地点と時間の指定をすることで到達できる場所の領域を生成することができる[到達圏エリアの作成](https://developers.arcgis.com/esri-leaflet/route-and-directions/find-service-areas/)も可能です。
 
@@ -794,7 +794,7 @@ map.on("click", (e) => {
    <!--  2-1. map オブジェクトを表示する要素を作成-->
    <div id="map"></div>
    <!-- 4-1. ルート案内の内容を表記する要素を追加 -->
-   <div id="directions">ルート検索をしたい場所をクリックしてください</div>
+   <div id="directions">ルート検索をしたい場所をクリックまたは左の検索ボタンで追加してください</div>
   <script type="text/javascript" src="main.js"></script>
 </body>
 
@@ -933,7 +933,7 @@ map.on("click", (e) => {
 ここでは、地名検索を行った後 `coordinates` にジオコーディングした結果を持たせ、関数 `addstoppoint()` を起動します。この時、地名検索を結果を入れるようにしていたレイヤー `searchlayers` は使わないため、ここでは消しています。
 
 これを実行することで、以下のように地名検索後、ルート検索を行うようにされます。
-![地名検索でルート検索地点を追加](../images/osm_app.gif)
+![地名検索でルート検索地点を追加](../images/route_geocode.gif)
 
 ## 6. Calcite Design Systemによるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
