@@ -283,7 +283,7 @@ searchControl.on('results', function (data) {
 
 `searchControl.on` は、変数 `searchControl` の `results` の値が変更されたときに起動します。そのイベントが起動した時 `data.results` に値が入っていれば、変数 `coordinates` に `data.results` の一個目の値から `latlng`(位置情報) を取得します。その時、検索結果が地図上に反映されている場合その値を `.clearLayers()` で削除します。これによって地図上に検索した値が残らずに新しく検索した結果のみ表示することができます。 [`L.marker`](https://leafletjs.com/reference-1.7.1.html#marker) は、地図上に立てるピンを生成します。この値を `searchLayers` に追加することで地図上に検索した地点にピンを立てることができます。
 
-地名検索で「富士山」と「富士市」を検索した結果が以下のようになります。
+地名検索で「羽田空港」と「東京ディズニーランド」を検索した結果が以下のようになります。
 ![地名検索の結果表示](../images/geocode_tokyo.gif)
 
 esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、今回作成するルート検索アプリを発展させた多機能なルート検索などを作成したい方は、参考にしてください。
