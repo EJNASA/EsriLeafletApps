@@ -10,7 +10,15 @@ JavaScript を触ったことがない方や環境設定が特殊な方などは
 
 本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてください。また、本リポジトリにある [calcite_design](./calcite_design) には発展形としてご紹介するソースコードが用意されていますので、今後の開発の参考にしてください。
 
-## 1. API キーの作成と設定
+本ハンズオンのアジェンダは以下の通りとなっています。
+1. API キーの作成と設定についての確認
+2. 地図の描画
+3. 地名検索の導入
+4. ルート検索の導入
+5. 地名検索をルート検索に反映
+6. Calcite Design System によるアプリデザインの一例
+
+## 1. API キーの作成と設定について
 始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
 
 「[開発者アカウントの作成](https://esrijapan.github.io/arcgis-dev-resources/guide/get-dev-account/)」と「[API キーの取得](https://esrijapan.github.io/arcgis-dev-resources/guide/get-api-key/)」を参照して作成を行ってください。
@@ -118,7 +126,37 @@ Leaflet では、`L.map` でベースマップを反映する map オブジェ�
 Esri Leaflet でもベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)などが用意されています。こちらは、目的にあったベースマップの選択が可能です。また、
 [カスタムのベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)の表示なども可能ですのでぜひご覧ください。
 
-## 3.地名の検索の導入
+他にも ArcGIS Online 上で公開されている ベクタータイルを使用することができます。例として Esri Japan が公開している ArcGIS のタイルレイヤーを使用して、ベースマップとして利用してみましょう。以下の URL 内の id を `L.esri.Vector.vectorBasemapLayer` でベースマップとして参照します。
+
+```
+https://www.arcgis.com/home/item.html?id=0fb0ac10931043ba81bef4b2d64d7165
+```
+
+```JavaScript
+// 2-2. API キーを入力
+const apiKey="YOUR_API_KEY";
+// 2-2-ex. ベースマップの指定方法
+const basemap = "0fb0ac10931043ba81bef4b2d64d7165";
+
+// 2-2. ベースマップの追加 
+
+// 2-2. マップを描画する場所を東京駅上空に指定
+const map = L.map('map', {
+    minZoom: 2
+}).setView([35.68109305881504, 139.76717512821057], 14);
+
+// 2-2. Esri のベクタータイルをベースマップに設定
+L.esri.Vector.vectorBasemapLayer(basemap, {
+  apiKey: apiKey
+}).addTo(map);
+```
+
+このように設定した場合、以下のように表示されるようになります。
+
+![Esri Japan が作成した Baselayer]()
+
+
+## 3.地名検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
 
 ### 3-1. index.html に esri-leaflet-geocoder の参照を追加
