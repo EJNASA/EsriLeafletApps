@@ -71,8 +71,8 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 ## 2. 地図の描画
 まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。この時、参照するリンクは leaflet.js と Esri Lealfet と Esri が提供しているベースマップを表示するために [esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector) を参照します。
 
-### 2-1. index.html をライブラリの参照も含んで作成する
-Leaflet js と Esri Leaflet の参照を含む index.html を作成します。
+### 2-1. ライブラリの参照を含んだ index.html の作成する
+Leaflet と Esri Leaflet の参照を含む index.html を作成します。
 
 ```HTML
 <html>
