@@ -1,4 +1,31 @@
-# ルート検索アプリの作成
+# オープンソースの Esri Leaflet を使用したルート検索アプリ開発のハンズオン
+本ハンズオンでは、オープンソースの JavaScript ライブラリを使用して、地図をクリックするか地名検索を実行するとルート検索を行うアプリを開発します。
+本ハンズオンの流れは以下の通りとなっています。0.と1.は、今回使用するライブラリの説明や API キーの準備を行なっています。開発パートは、本リポジトリの1.～5.にそって行なっていきます。最後に6.では、このハンズオンで開発するアプリの発展形ご紹介しています。
+
+0. [使用する JavaScript ライブラリと本リポジトリの構成](#0.-使用する JavaScript ライブラリと本リポジトリの構成)
+本ハンズオンで使用する JavaScript ライブラリについて記載しております。また、本リポジトリの構成についても説明しています。
+
+1. [API キーの作成と設定についての確認](1.-API キーの作成と設定についての確認)
+開発に使用する Esri のロケーションサービスにアクセスするための API キーの作成と設定について説明しています。
+
+2. 地図の描画
+Leaflet 及び Esri Leaflet を使用した地図の描画をします。ベースマップを Esri が提供するベースマップ レイヤーを使用するコードについて説明しています。
+
+3. 地名検索の導入
+Esri Leaflet のプラグインを使用し、地名または住所を検索すると検索した場所にマーカーを表示するコードを実装していきます。
+
+4. ルート検索の導入
+ArcGIS REST JS を使用し、地図上でクリックした二つの地点のルート検索を実行するコードを実装していきます。
+
+5. 地名検索をルート検索に反映
+3.で導入した地名検索の結果を4.のルート検索に反映するコードを実装していきます。
+
+6. Calcite Design System によるアプリデザインの一例
+Esri が提供している Calcite Design System を用いたアプリデザインの一例を紹介しています。
+
+なお、今回の開発にあたり JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスすることでオンライン上で開発を体験することができるので、おすすめです。なお、Visual Studio Code を使用するなど自身の環境で行う方は、本ハンズオンでは、index.html と main.js という形式で解説していますので、同じ形式で進めていただければと思います。その際には、[過去のハンズオン](https://github.com/EsriJapan/workshops/tree/master/20200825_app-development-hands-on/Environment#2-%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83)での環境設定も参考にしてください。
+
+## 0. 使用する JavaScript ライブラリと本リポジトリの構成
 [Leaflet](https://leafletjs.com/) は、メジャーで軽量なオープンソースのマッピング JavaScript ライブラリです。Leaflet は主に地図の表示や地図内に表示されるレイヤーの処理などを得意としています。
 [Esri Leaflet](https://esri.github.io/esri-leaflet/) は、Esri のロケーションサービスが使えるオープンソースの Leaflet のプラグインとなっています。
 
@@ -6,20 +33,10 @@
 
 ArcGIS REST JS は、Esri が提供している ArcGIS REST API の JavaScript ベースのラッパーです。今回は、こちらを使用することでルート検索を実装していきます。 
 
-JavaScript を触ったことがない方や環境設定が特殊な方などは、[CodePen](https://codepen.io/pen/) にアクセスして、作成することで、オンライン上で簡潔することができるので、おすすめです。なお、Visual Studio Code を使用するなど自身の環境で行う方は、本ハンズオンでは、index.html と main.js という形式で解説していますので、同じ形式で進めていただければと思います。その際には、[過去のハンズオン](https://github.com/EsriJapan/workshops/tree/master/20200825_app-development-hands-on/Environment#2-%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83)での環境設定も参考にしてください。
-
-本リポジトリには、このウェビナーで作成する Web アプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてください。また、本リポジトリにある [calcite_design](./calcite_design) には発展形としてご紹介するソースコードが用意されていますので、今後の開発の参考にしてください。
-
-本ハンズオンのアジェンダは以下の通りとなっています。
-1. API キーの作成と設定についての確認
-2. 地図の描画
-3. 地名検索の導入
-4. ルート検索の導入
-5. 地名検索をルート検索に反映
-6. Calcite Design System によるアプリデザインの一例
+本リポジトリには、ハンズオンで作成するアプリの完成形として、index.html と main.js を用意していますので、完成した状態の動作を確認したい方はこちらのソースコードを参考にしてください。また、本リポジトリにある [calcite_design フォルダ](./calcite_design) には発展形としてご紹介しているソースコードが用意されていますので、今後の開発の参考にしてください。
 
 ## 1. API キーの作成と設定について
-始めにルート検索と地名による検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
+始めにルート検索と地名検索の機能を使用するうえで必要となる開発者アカウントと API キーを作成します。
 
 「[開発者アカウントの作成](https://esrijapan.github.io/arcgis-dev-resources/guide/get-dev-account/)」と「[API キーの取得](https://esrijapan.github.io/arcgis-dev-resources/guide/get-api-key/)」を参照して作成を行ってください。
 
@@ -41,7 +58,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 この中から Geocoding (not stored) と Routing にチェックします。
 ![使用するサービスをチェック](../images/location.png)
 
-ここまでで、使用するロケーションサービスが利用できるようになりましたので、ここからルート検索アプリを作成していきます。
+ここまでで、使用するロケーションサービスが利用できるようになりましたので、ここからルート検索アプリを開発していきます。
 
 
 ## 2.地図の描画
@@ -153,7 +170,7 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 
 このように設定した場合、以下のように表示されるようになります。
 
-![Esri Japan が作成した Baselayer]()
+![Esri Japan が作成した Baselayer](../images/esri_japan_basemap.png)
 
 
 ## 3.地名検索の導入
@@ -324,7 +341,7 @@ searchControl.on('results', function (data) {
 地名検索で「羽田空港」と「東京ディズニーランド」を検索した結果が以下のようになります。
 ![地名検索の結果表示](../images/geocode_tokyo.gif)
 
-esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、今回作成するルート検索アプリを発展させた多機能なルート検索などを作成したい方は、参考にしてください。
+esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、今回のルート検索アプリを発展させた多機能なルート検索などを開発したい方は、参考にしてください。
 これらのジオコーディングに関する機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しています。
 
 ## 4.ルート検索の導入
@@ -975,6 +992,6 @@ map.on("click", (e) => {
 
 ## 6. Calcite Design Systemによるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
-Calcite Design System は、Esri が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んで作成することができます。今回は、[アコーディオンメニューのコンポーネント](https://developers.arcgis.com/calcite-design-system/components/accordion/)といくつかの [アイコン](https://developers.arcgis.com/calcite-design-system/icons/)を使用して、ルート検索結果の表示方法を変更しています。ここで使用している機能の詳細については、同リポジトリ内にある[calcite_design](./calcite_design)をご参照ください。
+Calcite Design System は、Esri が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んむことができます。今回は、[アコーディオンメニューのコンポーネント](https://developers.arcgis.com/calcite-design-system/components/accordion/)といくつかの [アイコン](https://developers.arcgis.com/calcite-design-system/icons/)を使用して、ルート検索結果の表示方法を変更しています。ここで使用している機能の詳細については、同リポジトリ内にある[calcite_design](./calcite_design)をご参照ください。
 
 ![Calcite Design System](../images/calcite.png)
