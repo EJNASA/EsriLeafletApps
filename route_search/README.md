@@ -1,10 +1,10 @@
 # オープンソースの Esri Leaflet を使用したルート検索アプリ開発のハンズオン
 本ハンズオンでは、オープンソースの JavaScript ライブラリを使用して、地図をクリックするか地名検索を実行するとルート検索を行うアプリを開発します。
-本ハンズオンの流れは以下の通りとなっています。0.と1.は、今回使用するライブラリの説明や API キーの設定を行なっています。開発パートは、本リポジトリの1.～5.にそって行なっていきます。最後に6.では、このハンズオンで開発するアプリの発展形を紹介しています。
+本ハンズオンの流れは以下の通りとなっています。開発パートは、本リポジトリの1.～5.にそって行なっていきます。6.では、このハンズオンで開発するアプリの発展形を紹介しています。
 
 0. [使用する JavaScript ライブラリと本リポジトリの構成](#0-使用する-javascript-ライブラリと本リポジトリの構成)
 
-  本ハンズオンで使用する JavaScript ライブラリについて記載しております。また、本リポジトリの構成についても説明しています。
+本ハンズオンで使用する JavaScript ライブラリについて記載しております。また、本リポジトリの構成についても説明しています。
 
 1. [API キーの作成と設定についての確認](#1-api-キーの作成と設定についての確認)
 
@@ -150,7 +150,7 @@ Leaflet では、`L.map` でベースマップを反映する map オブジェ�
 Esri Leaflet でもベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)などが用意されています。こちらは、目的にあったベースマップの選択が可能です。また、
 [カスタムのベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)の表示なども可能ですのでぜひご覧ください。
 
-他にも ArcGIS Online 上で公開されている ベクタータイルを使用することができます。例として Esri Japan が公開している ArcGIS のタイルレイヤーを使用して、ベースマップとして利用してみましょう。以下の URL 内の id を `L.esri.Vector.vectorBasemapLayer` でベースマップとして参照します。
+他にも ArcGIS Online 上で公開されているベクタータイルを使用することができます。例として Esri Japan が公開している ArcGIS の[タイルレイヤー](https://www.arcgis.com/home/item.html?id=0fb0ac10931043ba81bef4b2d64d7165)を使用して、ベースマップとして利用してみましょう。以下の URL 内の id を `L.esri.Vector.vectorBasemapLayer` でベースマップとして参照します。
 
 ```
 https://www.arcgis.com/home/item.html?id=0fb0ac10931043ba81bef4b2d64d7165
@@ -178,7 +178,6 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 このように設定した場合、以下のように表示されるようになります。
 
 ![Esri Japan が作成した Baselayer](../images/esri_japan_basemap.png)
-
 
 ## 3. 地名検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
