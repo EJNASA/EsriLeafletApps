@@ -6,7 +6,7 @@
 
 本ハンズオンで使用する JavaScript ライブラリについて記載しております。また、本リポジトリの構成についても説明しています。
 
-### [1. API キーの作成と設定についての確認](1.-API-キーの作成と設定についての確認)
+### [1. API キーの作成と設定についての確認](#1.-API-キーの作成と設定についての確認)
 
 開発に使用する Esri のロケーションサービスにアクセスするための API キーの作成と設定について説明しています。
 
@@ -68,7 +68,7 @@ API キーの管理画面。使用する API キーの Edit API Key をクリッ
 ここまでで、使用するロケーションサービスが利用できるようになりましたので、ここからルート検索アプリを開発していきます。
 
 
-## 2.地図の描画
+## 2. 地図の描画
 まず、はじめに地図を描画しましょう。以下に HTML と JavaScript のコードを記します。この時、参照するリンクは leaflet.js と Esri Lealfet と Esri が提供しているベースマップを表示するために [esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector) を参照します。
 
 ### 2-1. index.html をライブラリの参照も含んで作成する
@@ -180,7 +180,7 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 ![Esri Japan が作成した Baselayer](../images/esri_japan_basemap.png)
 
 
-## 3.地名検索の導入
+## 3. 地名検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
 
 ### 3-1. index.html に esri-leaflet-geocoder の参照を追加
@@ -351,7 +351,7 @@ searchControl.on('results', function (data) {
 esri-leaflet-geocoder には他にも機能が搭載されています。座標から住所を取り出す [reverse-geocode](https://developers.arcgis.com/esri-leaflet/geocode-and-search/reverse-geocode/) や地名ではなく、施設の種類で検索を行う [Find pleces](https://developers.arcgis.com/esri-leaflet/geocode-and-search/find-places/) などがありますので、今回のルート検索アプリを発展させた多機能なルート検索などを開発したい方は、参考にしてください。
 これらのジオコーディングに関する機能は [ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/search/) を参照しています。
 
-## 4.ルート検索の導入
+## 4. ルート検索の導入
 ルート検索を導入するために ArcGIS REST JS を参照します。ここでは、マップ上でクリックをするとマーカーが表示され、もう一度クリックした場所へのルート検索を実行するようなサンプルを作成しています。また、ルートまでの案内文も表示しています。
 
 ### 4-1. index.html に ArcGIS REST JS の参照を追加。ルート案内のメッセージを記すために div 要素も追加
@@ -786,7 +786,7 @@ map.on("click", (e) => {
 
 こちらは、[ArcGIS REST API](https://developers.arcgis.com/documentation/mapping-apis-and-services/routing/) を参照しています。
 
-## 5.地名検索をルート検索に反映
+## 5. 地名検索をルート検索に反映
 最後に地名検索をルート検索に反映させます。
 
 ### 5-1. 地名検索後、ルート検索の機能が動作するように設定
@@ -997,7 +997,7 @@ map.on("click", (e) => {
 これを実行することで、以下のように地名検索後、ルート検索を行うようにされます。
 ![地名検索でルート検索地点を追加](../images/route_geocode.gif)
 
-## 6. Calcite Design Systemによるデザイン
+## 6. Calcite Design System によるデザイン
 ここまで、ルート検索の基本的な機能を作ってきました。最後に発展形として [Calcite Design System](https://developers.arcgis.com/calcite-design-system/) を使ったアプリのデザインの例をご紹介します。
 Calcite Design System は、Esri が提供しているアプリのデザイン作成をサポートするものです。これらを使って以下のようなデザインをアプリに組み込んむことができます。今回は、[アコーディオンメニューのコンポーネント](https://developers.arcgis.com/calcite-design-system/components/accordion/)といくつかの [アイコン](https://developers.arcgis.com/calcite-design-system/icons/)を使用して、ルート検索結果の表示方法を変更しています。ここで使用している機能の詳細については、同リポジトリ内にある[calcite_design](./calcite_design)をご参照ください。
 
