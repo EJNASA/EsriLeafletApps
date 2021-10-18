@@ -179,6 +179,8 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 
 ![Esri Japan が作成した Baselayer](../images/esri_japan_basemap.png)
 
+これは、Esri が提供しているベースマップ レイヤー(`ArcGIS:Streets`)を Esri Japan で日本語の地図にしたタイルレイヤーとなります。先のサンプルで使用した `OSM:Streets` と同様に道路が見やすい地図となっています。
+
 ## 3. 地名検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
 
