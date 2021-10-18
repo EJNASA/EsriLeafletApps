@@ -1,6 +1,14 @@
 // API キーを入力
 const apiKey="YOUR_API_KEY";
-const basemap = "ArcGIS:Navigation";
+const basemap = "OSM:Streets"; 
+
+/* ハンズオンでは、使用しなかったベースマップの一部
+"ArcGIS:Imagery:Labels" // 衛星画像にラベルを表示した地図
+"ArcGIS:Navigation" // ナビゲーションに適した地図
+"ArcGIS:Topographic" //　地形図を含んだ地図
+"OSM:Standard" // Open Street Map をベクタータイル レイヤーとしたもの
+"OSM:DarkGray" // Open Street Map を元にした白黒地図
+*/
 
 // 地図の描画設定
 
@@ -64,6 +72,8 @@ function addstoppoint(){
     }
 }
 
+
+
 // ルート検索の実行をする関数
 function searchRoute() {
     // arcgis-rest-js を利用するための認証用の変数を用意します。
@@ -76,7 +86,8 @@ function searchRoute() {
         stops: [startCoords, endCoords], 
         endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
         authentication,
-        params:{directionsLanguage:"ja"} // 使用言語を日本語に変更
+        params:{directionsLanguage:"ja"
+        } // 使用言語を日本語に変更
         })
         // 結果の表示
       .then((response) => {
