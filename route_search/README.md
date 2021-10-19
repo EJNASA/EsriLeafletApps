@@ -26,7 +26,7 @@ ArcGIS REST JS を使用し、地図上でクリックした二つの地点の�
 
 3.で導入した地名検索の結果を4.のルート検索に反映するコードを実装しています。
 
-6. [Calcite Design System によるアプリデザインの一例](#6-calcite-design-system-によるアプリデザインの一例)
+6. [Calcite Design System によるアプリデザインの一例](#6-calcite-design-system-によるデザイン)
 
 Esri が提供している Calcite Design System を用いたアプリデザインの一例を紹介しています。
 
@@ -150,11 +150,7 @@ Leaflet では、`L.map` でベースマップを反映する map オブジェ�
 Esri Leaflet でもベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)などが用意されています。こちらは、目的にあったベースマップの選択が可能です。また、
 [カスタムのベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)の表示なども可能ですのでぜひご覧ください。
 
-他にも ArcGIS Online 上で公開されているベクタータイルを使用することができます。例として Esri Japan が公開している ArcGIS の[タイルレイヤー](https://www.arcgis.com/home/item.html?id=0fb0ac10931043ba81bef4b2d64d7165)を使用して、ベースマップとして利用してみましょう。以下の URL 内の id を `L.esri.Vector.vectorBasemapLayer` でベースマップとして参照します。
-
-```
-https://www.arcgis.com/home/item.html?id=0fb0ac10931043ba81bef4b2d64d7165
-```
+他にも ArcGIS Online 上で公開されているベクタータイルを使用することができます。例として Esri Japan が公開している ArcGIS のタイルレイヤーを使用して、ベースマップとして利用してみましょう。アイテム id を `L.esri.Vector.vectorBasemapLayer` でベースマップとして参照します。
 
 ```JavaScript
 // 2-2. API キーを入力
