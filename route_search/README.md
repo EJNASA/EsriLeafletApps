@@ -139,7 +139,7 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 
 ```
 
-Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを `map` の id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてくださればと思います。
+Leaflet では、`L.map` でベースマップを反映する map オブジェクトを生成します。この時、map オブジェクトを `map` の id 属性を持つ要素に付与します。この時指定できる option に関しては、Leaflet の API リファレンス上にある [`L.map`](https://leafletjs.com/reference-1.7.1.html#map-l-map)の欄をご参考にしてください。
 今回、日本国内でルート検索を行いたいと考えているため地図を表示する初期位置とズームレベルを指定する `.setView()` メソッドを map オブジェクトに付与します。
 次に使用するベースマップとして、Esri の提供するベースマップを使うため Esri Leaflet のプラグイン esri-leaflet-vector の `L.esri.Vector.vectorBasemapLayer` を使用しています。この時、必要な値は API キーと使用したいベースマップの名前になります。今回は、ルート案内を行うことを目的としているため、道路の見やすい `OSM:Streets` を選択しています。このベースマップはオープンソースの Web 地図である [OpenStreetMap](https://openstreetmap.jp/#zoom=5&lat=38.06539&lon=139.04297&layers=B000) を基に Esri がベクタータイルにしたものになっています。
 
@@ -259,6 +259,8 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
 
 // 2-2. ベースマップの追加の終了
 
+
+
 // 3-2-1. 地名検索の追加
 
 // 3-2-1. 地名検索
@@ -319,6 +321,8 @@ const searchControl = L.esri.Geocoding.geosearch({
 
 // 3-2-1. 地名検索の追加を終了
 
+
+
 // 3-2-2. 地名検索を行った後の動作を追加
 
 // 3-2-2. 検索結果を入れるレイヤーの作成
@@ -334,8 +338,6 @@ searchControl.on('results', function (data) {
 });
 
 // 3-2-2. 地名検索を行った後の動作を追加の終了
-
-
 ```
 
 先に検索したものをまとめて管理するためにポイント用のレイヤーとして `searchlayers` を用意します。[`L.layer.Group()`](https://leafletjs.com/reference-1.7.1.html#layergroup) は、Leaflet の関数で、Leaflet 上で扱えるレイヤーを作成します。このレイヤーは、地名検索の結果を入れておくレイヤーになります。
@@ -400,7 +402,9 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
             right:0;
             left:0;
             }
+
             /* 4-1.ルート案内文を記載する領域の CSS の追加 */
+            
             #directions {
             position: absolute;
             z-index: 1000;
@@ -414,7 +418,9 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
             font-size: 14px;
             padding: 10px;
             }
+
             /* 4-1. CSS の追加終了 */
+        
         </style>
 
     </head>
@@ -422,8 +428,11 @@ esri-leaflet-geocoder には他にも機能が搭載されています。座標�
     <body>
         <!--  2-1. map オブジェクトを表示する要素を作成-->
         <div id="map"></div>
+        
         <!-- 4-1. ルート案内の内容を表記する要素を追加 -->
+        
         <div id="directions">ルート検索をしたい場所をクリックしてください</div>
+        
         <!-- 4-1. 追加終了 -->
         <script type="text/javascript" src="main.js"></script>
     </body>
@@ -481,9 +490,13 @@ searchControl.on('results', function (data) {
     }    
 });
 
+
+
 // 4-2. ルート検索の機能の追加
 
 // 4-2-1. ルート検索に使う変数と始点終点を決めるための関数の追加
+
+
 
 // 4-2-1. directions の要素を取得し、ルート案内を表示する
 const directions=document.getElementById("directions");
@@ -516,8 +529,9 @@ function addstoppoint(){
     }
 }
 
-// 4-2-1. ルート検索に使う変数と始点終点を決めるための関数の追加終了
 
+
+// 4-2-1. ルート検索に使う変数と始点終点を決めるための関数の追加終了
 ```
 
 まず始めにルート検索に必要な始点と終点を設置するために変数と関数を作成します。ルート検索をしたあと、もう一度別のルート検索を行う際に以前の検索結果を削除するために始点情報を入れるレイヤー `startLayerGroup` 、終点情報を入れるレイヤー `endLayerGroup`、ルートのライン情報を入れる `routeLines` に `L.layerGroup()` で Layer オブジェクトを設定します。他にも設定するポイントが始点か終点かを判定するために使うフラグとして変数 `currentStep` を作成し、始点の位置情報として `startCoords` 、終点の位置情報として `endCoords` を用意します。
@@ -604,6 +618,8 @@ function addstoppoint(){
     }
 }
 
+
+
 // 4-2-2. ルート検索の関数の追加開始
 
 // 4-2-2. ルート検索の実行をする関数
@@ -638,7 +654,6 @@ function searchRoute() {
  }
 
 // 4-2-2. ルート検索の関数の追加を終了
-
 ```
 関数 `searchRoute` では、初めに ArcGIS REST API を呼び出すために必要な API キーを ArcGIS REST JS で使用するために [arcgisRest.ApiKey](https://esri.github.io/arcgis-rest-js/api/auth/ApiKey/) で使用する API キーを指定します。そのあと、ルート検索を行う `arcgisRest.solveRoute` の設定をします。実行前に始点と終点を指定する必要があるため、 `startCoords` と `endCoords` の値が入力された後にルート検索を実行します。`arcgisRest.solveRoute` にはいくつか option が設定されていますが、今回使用している option の説明を以下に羅列します。
 
@@ -763,6 +778,8 @@ function searchRoute() {
       });
  }
 
+
+
 // 4-2-3. 地図上をクリックした場所の位置情報をルート検索の始点もしくは終点に登録するメソッドを追加
 
  // 4-2-3. クリックした場所の位置情報を返す
@@ -772,7 +789,6 @@ map.on("click", (e) => {
   });
 
 // 4-2-3. 地図上をクリックした場所の位置情報をルート検索の始点もしくは終点に登録するメソッドを追加の終了
-
 ```
 最後にルート検索を実行する方法として、`map.on` メソッドで地図上をクリックするとクリックした場所の情報を返すように指定します。その位置情報を `coordinates` に与えます。その後、関数 `addstopoint()` を起動して、ルート検索の始点終点を設定します。
 
@@ -853,7 +869,13 @@ map.on("click", (e) => {
    <!--  2-1. map オブジェクトを表示する要素を作成-->
    <div id="map"></div>
    <!-- 4-1. ルート案内の内容を表記する要素を追加 -->
-   <div id="directions">ルート検索をしたい場所をクリックまたは左の検索ボタンで追加してください</div>
+
+  <!-- 5-1. ルート案内の内容を表記する要素の最初の文章を変更 -->
+  
+  <div id="directions">ルート検索をしたい場所をクリックまたは左の検索ボタンで追加してください</div>
+  
+  <!-- 5-1. ルート案内の内容を表記する要素の最初の文章を変更を終了 -->
+  
   <script type="text/javascript" src="main.js"></script>
 </body>
 
@@ -903,9 +925,13 @@ let searchlayers=L.layerGroup().addTo(map);
 searchControl.on('results', function (data) {
     if(data.results){
         coordinates = data.results[0].latlng;
+        
         // 5-1. 関数を追加
+
         addstoppoint();
+        
         // 5-1. 追加終了
+        
         /*
         使用しなくてよいため削除
         searchlayers.clearLayers(); //前回の結果を削除
