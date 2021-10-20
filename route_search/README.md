@@ -12,7 +12,7 @@
 
 2. [地図の描画](#2-地図の描画)
 
-Leaflet 及び Esri Leaflet を使用した地図の描画をします。ベースマップを Esri が提供するベースマップ レイヤーを使用するコードについて説明しています。
+Leaflet 及び Esri Leaflet を使用した地図の描画をします。ベースマップに Esri が提供するベースマップ レイヤーを使用しています。
 
 3. [地名検索の導入](#3-地名検索の導入)
 
@@ -149,33 +149,6 @@ Leaflet では、`L.map` でベースマップを反映する map オブジェ�
 ここまで、ベースマップの描画で Esri が提供するベースマップを使用しましたが、例に示しているベースマップ( `OSM:Streets` )だけではなく、多くのベクタータイル ベースマップを提供しています。詳細は、[Basemap layer service](https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/services/basemap-layer-service/) を参照してください。
 Esri Leaflet でもベクタータイル ベースマップを選択する[サンプル](https://developers.arcgis.com/esri-leaflet/maps/change-the-basemap-layer/)などが用意されています。こちらは、目的にあったベースマップの選択が可能です。また、
 [カスタムのベクタータイル ベースマップ](https://developers.arcgis.com/esri-leaflet/styles-and-visualization/display-a-custom-vector-tile-style/)の表示なども可能ですのでぜひご覧ください。
-
-他にも ArcGIS Online 上で公開されているベクタータイルを使用することができます。例として Esri Japan が公開している ArcGIS のタイルレイヤーを使用して、ベースマップとして利用してみましょう。アイテム id を `L.esri.Vector.vectorBasemapLayer` でベースマップとして参照します。
-
-```JavaScript
-// 2-2. API キーを入力
-const apiKey="YOUR_API_KEY";
-// 2-2-ex. ArcGIS Online 上に公開されているベースマップの指定方法
-const basemap = "0fb0ac10931043ba81bef4b2d64d7165";
-
-// 2-2. ベースマップの追加 
-
-// 2-2. マップを描画する場所を東京駅上空に指定
-const map = L.map('map', {
-    minZoom: 2
-}).setView([35.68109305881504, 139.76717512821057], 14);
-
-// 2-2. Esri のベクタータイルをベースマップに設定
-L.esri.Vector.vectorBasemapLayer(basemap, {
-  apiKey: apiKey
-}).addTo(map);
-```
-
-このように設定した場合、以下のように表示されるようになります。
-
-![Esri Japan が作成した Baselayer](../images/esri_japan_basemap.png)
-
-これは、Esri が提供しているベースマップ レイヤー(`ArcGIS:Streets`)を Esri Japan で日本語の地図にしたタイルレイヤーとなります。先のサンプルで使用した `OSM:Streets` と同様に道路が見やすい地図となっています。
 
 ## 3. 地名検索の導入
 今回、ルート検索を地名や住所から行えるようにするために [esri-leaflet-geocoder](https://github.com/Esri/esri-leaflet-geocoder) を参照しています。上記の地図を描画させた index.html と main.js に住所検索、地名検索を追加していきます。
