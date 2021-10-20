@@ -1,11 +1,11 @@
 const apiKey="YOUR_API_KEY";
-const basemap = "ArcGIS:Navigation";
+const basemap = "OSM:Streets";
 
 // zoom control の位置を変えるために zoomControl には false を指定
 const map = L.map('map', {
     minZoom: 2,
     zoomControl:false
-});
+}).setView([35.68109305881504, 139.76717512821057], 14);
 
 // zoom のコントローラーを右上に指定
 L.control.zoom( { position: 'topright' } ).addTo( map );
@@ -83,7 +83,6 @@ function addtostoppoint(pointname){ // 場所の名前を引数に設定
     endpoint=pointname;
     currentStep = "start"; 
   }
-  console.log(map.hasLayer(startLayerGroup));
   if (startCoords && endCoords) {
     searchRoute(); // startとendができたらルート検索をかける
   }
@@ -108,9 +107,10 @@ function addtostoppoint(pointname){ // 場所の名前を引数に設定
   return direction;
 }
 
-// 設定されている id の要素を取得
+// 設定されている id の要素もしくは要素自体を取得
 const search=document.getElementById("geocode");
 const directions=document.getElementById("direction");
+const loading=document.getElementsByTagName("calcite-loader");
 
  // マップ上の検索結果をリセットするために Layer Group を作成
 const startLayerGroup = L.layerGroup().addTo(map);
@@ -125,6 +125,7 @@ let startCoords, startpoint, endCoords, endpoint
 
 // ルート検索の関数
 function searchRoute() { 
+  loading[0].setAttribute("active",""); // ルート検索開始後に calcite-loader を active にする
    // arcgis-rest-js のサービスを利用するために API キーを指定
    const authentication = new arcgisRest.ApiKey({
      key: apiKey
@@ -144,6 +145,7 @@ function searchRoute() {
        directions.innerHTML = add_direction(directionsHTML,startpoint,endpoint);
        startCoords = null; // 最後にスタート、ゴール地点の情報を消す
        endCoords = null;
+     loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
      })
      // エラー時の表示
      .catch((error) => {
@@ -151,6 +153,7 @@ function searchRoute() {
        alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
        startCoords = null; // エラー時にも始点、終点の位置情報をリセット
        endCoords = null;
+       loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
      });
 }
 
@@ -193,13 +196,3 @@ map.on("click", (e) => {
   })
   
 });
-
-
-// map オブジェクトのロードが終わり次第 caicite-loader を削除
-map.on('load',function() {
-  loading=document.getElementsByTagName("calcite-loader")[0];
-  loading.removeAttribute("active");
-});
-
-// 初期位置を東京駅の上空に指定
-map.setView([35.68109305881504, 139.76717512821057], 14);
