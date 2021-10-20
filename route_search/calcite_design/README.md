@@ -17,18 +17,54 @@ Calcite Design System は、Esri のデザインフレームワークを Stencil
 ### calcite-loader
 loader を表示します。active 属性を設定することで loader が表示され、active 属性を消すことで表示が消えます。
 
-今回は `map` オブジェクトが表示されるまで loader を表示するために使っています。これを実装するために JavaScript 内で `load` イベントを `map` オブジェクトに付与することで実現しています。
+今回は、ルート検索の結果が表示されるまで loader を表示するために使っています。これを実装するためにルート検索を実行する関数 `searchRoute()` を実行すると active になり、結果が入力されると active 属性を削除します。
 
 ```HTML
-<calcite-loader active text="マップ読み込み中"></calcite-loader>
+<calcite-loader active text="ルート検索中"></calcite-loader>
 ```
 
 ```JavaScript
-// map オブジェクトのロードが終わり次第 active 属性を削除
-map.on('load',function() {
-  loading=document.getElementsByTagName("calcite-loader")[0];
-  loading.removeAttribute("active"); // 
-});
+function searchRoute() { 
+
+  // ルート検索開始後に calcite-loader を active にする
+  loading[0].setAttribute("active",""); 
+  
+  // arcgis-rest-js のサービスを利用するために API キーを指定
+   const authentication = new arcgisRest.ApiKey({
+     key: apiKey
+   });
+      arcgisRest
+      //　ルート検索の開始
+     .solveRoute({
+       stops: [startCoords, endCoords], 
+       endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
+       authentication,
+       params:{directionsLanguage:"ja"} // 使用言語を日本語に変更
+       })
+       // 結果の表示
+     .then((response) => {
+       geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
+       const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
+       directions.innerHTML = add_direction(directionsHTML,startpoint,endpoint);
+       startCoords = null; // 最後にスタート、ゴール地点の情報を消す
+       endCoords = null;
+
+       // ルート検索終了後に calcite-loader を削除
+       loading[0].removeAttribute("active"); 
+
+     })
+     // エラー時の表示
+     .catch((error) => {
+       console.error(error);
+       alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
+       startCoords = null; // エラー時にも始点、終点の位置情報をリセット
+       endCoords = null;
+
+      // ルート検索終了後に calcite-loader を削除
+       loading[0].removeAttribute("active"); 
+     
+     });
+}
 ```
 
 ![ loader の表示](../../images/loader.gif)
