@@ -8,7 +8,6 @@ const authentication = new arcgisRest.ApiKey({
 
 // zoom control の位置を変えるために zoomControl には false を指定
 const map = L.map('map', {
-    minZoom: 2,
     zoomControl:false
 }).setView([35.68109305881504, 139.76717512821057], 14);
 
@@ -53,33 +52,6 @@ population=L.esri.featureLayer({
 // leaflet で人流メッシュの表示、非表示をコントロール
 popmesh={"人流メッシュ":population};
 L.control.layers({},popmesh).addTo(map);
-
-// leaflet で表示したい
-// population.bindTooltip(function (layer) {
-//   return "平均滞在人口:"+layer.feature.properties.人流_population+"人";
-// },{direction:"top"});
-
-// マーカーデザインの設定 divicon1 は スタート地点、divicon2 はゴール地点
-const divIcon1 = L.divIcon({
-  html: '<calcite-icon icon="number-circle-1" /></calcite-icon>',
-  className: 'divicon',
-  iconSize: [25,25],
-  popupAnchor: [0, 0]
-});
-
-const divIcon2 = L.divIcon({
-  html: '<calcite-icon icon="number-circle-2" /></calcite-icon>',
-  className: 'divicon',
-  iconSize: [25,25],
-  popupAnchor: [0, 0]
-});
-
-// static.arcgis.com のシンボルを参照
-const store= L.icon({
-  iconUrl: 'http://static.arcgis.com/images/Symbols/PeoplePlaces/Shopping.png',
-    iconSize: [24, 24],
-    popupAnchor: [0, 0]
-});
 
 // 始点終点の位置情報がない場合 layergroup のレイヤーのリセットの実行する関数
 function layerclear(){
@@ -170,18 +142,17 @@ function searches(center){
     authentication
   }).then((response) => {
       for(i=0;i<=response.candidates.length;i++){
-          if(response.candidates.length<=i+1){
-               break;
-             }
-              //距離が 100m 以内のもののみ表示するようにする
               latlng=response.geoJson.features[i].geometry.coordinates;
               names=response.candidates[i].address;
-              nearpoint=L.latLng(latlng[1],latlng[0]);
-              l_center=L.latLng(center[1],center[0]);
-              distance=l_center.distanceTo(nearpoint);
+              nearpoint=L.latLng(latlng[1],latlng[0]); 
+              lcenter=L.latLng(center[1],center[0]);
+              distance=lcenter.distanceTo(nearpoint);
+              //距離が 100m 以内のもののみ表示するようにする
               if(distance<=100){
-                  L.marker(nearpoint,{icon:store}).bindPopup(names).addTo(alonglayer);
-              }else{
+                (async()=>{
+                  await overlap(population,nearpoint);
+                })();
+             }else{
                   break;
               }
       }
@@ -190,24 +161,13 @@ function searches(center){
 
 }
 
-// 設定されている id の要素もしくは要素自体を取得
-const search=document.getElementById("geocode");
-const directions=document.getElementById("direction");
-const loading=document.getElementsByTagName("calcite-loader");
-
- // マップ上の検索結果をリセットするために Layer Group を作成
- const startLayerGroup = L.layerGroup().addTo(map);
- const endLayerGroup = L.layerGroup().addTo(map);
-
- // マップ上の検索結果をリセットするために Layer Group for route lines を作成
-const routeLines = L.layerGroup().addTo(map);
-
-// 道中にあるもののポイントレイヤーグループ
-const alonglayer=L.layerGroup().addTo(map);
-
-let currentStep = "start";
-let startCoords, startpoint, endCoords, endpoint
-
+// 人流データとの重なりを判定して、その位置にマーカーを描画
+function overlap(polygon,point){
+  return polygon.query().intersects(nearpoint).run(function(error,response,featureCollection){
+    // 店名と重なっている人流メッシュレイヤーの平均滞在人数を Tooltip で表示 
+    L.marker(point,{icon:store}).bindTooltip("<b>"+names+"</b><br>周辺平均滞在人口:"+featureCollection.features[0].properties.人流_population+"人").addTo(alonglayer);
+  });
+}
 
 // ルート検索の関数
 function searchRoute() { 
@@ -244,6 +204,46 @@ function searchRoute() {
        loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
      });
 }
+
+// マーカーデザインの設定 divicon1 は スタート地点、divicon2 はゴール地点
+const divIcon1 = L.divIcon({
+  html: '<calcite-icon icon="number-circle-1" /></calcite-icon>',
+  className: 'divicon',
+  iconSize: [25,25],
+  popupAnchor: [0, 0]
+});
+
+const divIcon2 = L.divIcon({
+  html: '<calcite-icon icon="number-circle-2" /></calcite-icon>',
+  className: 'divicon',
+  iconSize: [25,25],
+  popupAnchor: [0, 0]
+});
+
+// static.arcgis.com のシンボルを参照して icon を作成
+const store= L.icon({
+    iconUrl: 'http://static.arcgis.com/images/Symbols/PeoplePlaces/Shopping.png',
+    iconSize: [24, 24],
+    popupAnchor: [0, 0]
+});
+
+// 設定されている id の要素もしくは要素自体を取得
+const search=document.getElementById("geocode");
+const directions=document.getElementById("direction");
+const loading=document.getElementsByTagName("calcite-loader");
+
+ // マップ上の検索結果をリセットするために Layer Group を作成
+ const startLayerGroup = L.layerGroup().addTo(map);
+ const endLayerGroup = L.layerGroup().addTo(map);
+
+ // マップ上の検索結果をリセットするために Layer Group for route lines を作成
+const routeLines = L.layerGroup().addTo(map);
+
+// 道中にあるもののポイントレイヤーグループ
+const alonglayer=L.layerGroup().addTo(map);
+
+let currentStep = "start";
+let startCoords, startpoint, endCoords, endpoint
 
 // 住所、場所検索
 start_search=geocoder("start");
