@@ -113,7 +113,7 @@ function addtostoppoint(pointname,coordinates){ // 場所の名前と取得し�
  }
 
  // ルート案内の文章に calcite-icon を指定するための関数
- function add_direction(str,startpoint,endpoint){ // str: ルート案内の文章, startpoint: スタート地点の場所名, endpoint: ゴール地点の場所名
+ function adddirection(str,startpoint,endpoint){ // str: ルート案内の文章, startpoint: スタート地点の場所名, endpoint: ゴール地点の場所名
   str=str.replace("Location 1",startpoint);
   str=str.replace("Location 2",endpoint);
   str_split=str.split("<br>");
@@ -132,7 +132,7 @@ function addtostoppoint(pointname,coordinates){ // 場所の名前と取得し�
 }
 
 // 各ポイントでの 100m 以内に存在する POIを検索する
-function searches(center){ 
+function addPoi(center){ 
   arcgisRest.geocode({
   params: {
       category: "Convenience Store",// POI 検索
@@ -150,7 +150,7 @@ function searches(center){
               //距離が 100m 以内のもののみ表示するようにする
               if(distance<=100){
                 (async()=>{
-                  await overlap(population,nearpoint);
+                  await overlap(population,nearpoint,names);
                 })();
              }else{
                   break;
@@ -162,10 +162,10 @@ function searches(center){
 }
 
 // 人流データとの重なりを判定して、その位置にマーカーを描画
-function overlap(polygon,point){
+function overlap(polygon,point,placename){
   return polygon.query().intersects(nearpoint).run(function(error,response,featureCollection){
     // 店名と重なっている人流メッシュレイヤーの平均滞在人数を Tooltip で表示 
-    L.marker(point,{icon:store}).bindTooltip("<b>"+names+"</b><br>周辺平均滞在人口:"+featureCollection.features[0].properties.人流_population+"人").addTo(alonglayer);
+    L.marker(point,{icon:store}).bindPopup(placename).bindTooltip("<b>"+placename+"</b><br>周辺平均滞在人口:"+featureCollection.features[0].properties.人流_population+"人").addTo(alonglayer);
   });
 }
 
@@ -186,13 +186,13 @@ function searchRoute() {
      .then((response) => {
       geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
       const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
-      directions.innerHTML = add_direction(directionsHTML,startpoint,endpoint);
+      directions.innerHTML = adddirection(directionsHTML,startpoint,endpoint);
       startCoords = null; // 最後にスタート、ゴール地点の情報を消す
       endCoords = null;
       loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
       point_list=response.routes.geoJson.features[0].geometry.coordinates; // Polyline の点を取得
       for(i=1; i<point_list.length;i++){
-          searches(point_list[i-1]); 
+          addPoi(point_list[i-1]); 
       }
      })
      // エラー時の表示
