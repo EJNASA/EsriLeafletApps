@@ -19,6 +19,43 @@ L.esri.Vector.vectorBasemapLayer(basemap, {
   apiKey: apiKey
 }).addTo(map);
 
+// 設定されている id の要素もしくは要素自体を取得
+const search=document.getElementById("geocode");
+const directions=document.getElementById("direction");
+const loading=document.getElementsByTagName("calcite-loader");
+
+// マップ上の検索結果をリセットするために Layer Group を作成
+const startLayerGroup = L.layerGroup().addTo(map);
+const endLayerGroup = L.layerGroup().addTo(map);
+
+// マップ上の検索結果をリセットするために Layer Group for route lines を作成
+const routeLines = L.layerGroup().addTo(map);
+
+// 道中にあるもののポイントレイヤーグループ
+const alonglayer=L.layerGroup().addTo(map);
+
+let currentStep = "start";
+let startCoords, startpoint, endCoords, endpoint
+
+// 住所、場所検索
+start_search=geocoder("start");
+end_search=geocoder("end");
+
+// 地名検索の検索ボタンの位置をアコーディオンメニュー内に入れる 
+const start_container=start_search.getContainer();
+search.appendChild(start_container); 
+const end_container=end_search.getContainer();
+search.appendChild(end_container); 
+
+// 検索バーを開いている状態に設定する
+start_container.click();  
+end_container.click();
+
+// geocode の参照元のアクセスキーを設定
+const geocodeService = L.esri.Geocoding.geocodeService({
+  apikey: apiKey 
+});
+
 // 使用するレイヤーの表示
 population=L.esri.featureLayer({
   url: 'https://services3.arcgis.com/qcPpjnUOIagfSFbp/arcgis/rest/services/%E4%BA%BA%E6%B5%81_mesh_gdb/FeatureServer/0', //urlを消しておく
@@ -83,13 +120,12 @@ function geocoder(step){ // currentStep の値を指定するために引数に�
   }).addTo(map);
   // 検索結果最上位を基本的に取得
   searchControl.on('results', function (data) {
-  currentStep=step;
-  if(data.results){
-    coordinates = data.results[0].latlng;
-    addtostoppoint(data.results[0].text,coordinates);
-  }
+    if(data.results){
+      coordinates = data.results[0].latlng;
+      addtostoppoint(data.results[0].text,coordinates);
+    }
   });
-return searchControl;
+  return searchControl;
 }
 
 // ルート検索をしたい始点終点を決めるための関数
@@ -113,7 +149,7 @@ function addtostoppoint(pointname,coordinates){ // 場所の名前と取得し�
  }
 
  // ルート案内の文章に calcite-icon を指定するための関数
- function adddirection(str,startpoint,endpoint){ // str: ルート案内の文章, startpoint: スタート地点の場所名, endpoint: ゴール地点の場所名
+function adddirection(str,startpoint,endpoint){ // str: ルート案内の文章, startpoint: スタート地点の場所名, endpoint: ゴール地点の場所名
   str=str.replace("Location 1",startpoint);
   str=str.replace("Location 2",endpoint);
   str_split=str.split("<br>");
@@ -125,7 +161,7 @@ function addtostoppoint(pointname,coordinates){ // 場所の名前と取得し�
       str_split[i]=str_split[i].replace("U ターン",'<br><calcite-icon icon="u-turn-right" /></calcite-icon>Uターン')
     }else{
       str_split[i]='<br><calcite-icon icon="compass" /></calcite-icon>'+str_split[i];
-  }
+    }
     direction+=str_split[i]+"<br><hr>";
 }
   return direction;
@@ -134,28 +170,28 @@ function addtostoppoint(pointname,coordinates){ // 場所の名前と取得し�
 // 各ポイントでの 100m 以内に存在する POIを検索する
 function addPoi(center){ 
   arcgisRest.geocode({
-  params: {
-      category: "Convenience Store",// POI 検索
-      location: center,
-      maxLocations: 5
-    },
+    params: {
+        category: "Convenience Store",// POI 検索
+        location: center,
+        maxLocations: 5
+      },
     authentication
   }).then((response) => {
-      for(i=0;i<=response.candidates.length;i++){
-              latlng=response.geoJson.features[i].geometry.coordinates;
-              names=response.candidates[i].address;
-              nearpoint=L.latLng(latlng[1],latlng[0]); 
-              lcenter=L.latLng(center[1],center[0]);
-              distance=lcenter.distanceTo(nearpoint);
-              //距離が 100m 以内のもののみ表示するようにする
-              if(distance<=100){
-                (async()=>{
-                  await overlap(population,nearpoint,names);
-                })();
-             }else{
-                  break;
-              }
+    for(i=0;i<=response.candidates.length;i++){
+      latlng=response.geoJson.features[i].geometry.coordinates;
+      names=response.candidates[i].address;
+      nearpoint=L.latLng(latlng[1],latlng[0]); 
+      center_latlng=L.latLng(center[1],center[0]);
+      distance=center_latlng.distanceTo(nearpoint);
+      //距離が 100m 以内のもののみ表示するようにする
+      if(distance<=100){
+        (async()=>{
+          await overlap(population,nearpoint,names);
+        })();
+      }else{
+          break;
       }
+    }
 
   });
 
@@ -174,35 +210,34 @@ function searchRoute() {
   loading[0].setAttribute("active",""); // ルート検索開始後に calcite-loader を active にする
    // arcgis-rest-js のサービスを利用するために API キーを指定
    
-      arcgisRest
-      //　ルート検索の開始
-     .solveRoute({
-       stops: [startCoords, endCoords], 
-       endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
-       authentication,
-       params:{directionsLanguage:"ja"} // 使用言語を日本語に変更
-       })
-       // 結果の表示
-     .then((response) => {
-      geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
-      const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
-      directions.innerHTML = adddirection(directionsHTML,startpoint,endpoint);
-      startCoords = null; // 最後にスタート、ゴール地点の情報を消す
-      endCoords = null;
-      loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
-      point_list=response.routes.geoJson.features[0].geometry.coordinates; // Polyline の点を取得
-      for(i=1; i<point_list.length;i++){
-          addPoi(point_list[i-1]); 
-      }
-     })
-     // エラー時の表示
-     .catch((error) => {
-       console.error(error);
-       alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
-       startCoords = null; // エラー時にも始点、終点の位置情報をリセット
-       endCoords = null;
-       loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
-     });
+  arcgisRest
+  //　ルート検索の開始
+  .solveRoute({
+    stops: [startCoords, endCoords], 
+    endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
+    authentication,
+    params:{directionsLanguage:"ja"} // 使用言語を日本語に変更
+    })
+    // 結果の表示
+  .then((response) => {
+    geojson=L.geoJSON(response.routes.geoJson).addTo(routeLines); // geojson 化したルートを表示
+    const directionsHTML = response.directions[0].features.map((f) => f.attributes.text).join("<br>");
+    directions.innerHTML = adddirection(directionsHTML,startpoint,endpoint);
+    startCoords = null; // 最後にスタート、ゴール地点の情報を消す
+    endCoords = null;
+    loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
+    // Polyline の点ごとに近隣検索
+    response.routes.geoJson.features[0].geometry.coordinates
+    .map(point => addPoi(point));
+  })
+  // エラー時の表示
+  .catch((error) => {
+    console.error(error);
+    alert("ルート検索に失敗しました<br>始点と終点の情報をリセットします");
+    startCoords = null; // エラー時にも始点、終点の位置情報をリセット
+    endCoords = null;
+    loading[0].removeAttribute("active"); // ルート検索終了後に calcite-loader を削除
+  });
 }
 
 // マーカーデザインの設定 divicon1 は スタート地点、divicon2 はゴール地点
@@ -222,46 +257,9 @@ const divIcon2 = L.divIcon({
 
 // static.arcgis.com のシンボルを参照して icon を作成
 const store= L.icon({
-    iconUrl: 'http://static.arcgis.com/images/Symbols/PeoplePlaces/Shopping.png',
-    iconSize: [24, 24],
-    popupAnchor: [0, 0]
-});
-
-// 設定されている id の要素もしくは要素自体を取得
-const search=document.getElementById("geocode");
-const directions=document.getElementById("direction");
-const loading=document.getElementsByTagName("calcite-loader");
-
- // マップ上の検索結果をリセットするために Layer Group を作成
- const startLayerGroup = L.layerGroup().addTo(map);
- const endLayerGroup = L.layerGroup().addTo(map);
-
- // マップ上の検索結果をリセットするために Layer Group for route lines を作成
-const routeLines = L.layerGroup().addTo(map);
-
-// 道中にあるもののポイントレイヤーグループ
-const alonglayer=L.layerGroup().addTo(map);
-
-let currentStep = "start";
-let startCoords, startpoint, endCoords, endpoint
-
-// 住所、場所検索
-start_search=geocoder("start");
-end_search=geocoder("end");
-
-// 地名検索の検索ボタンの位置をアコーディオンメニュー内に入れる 
-const start_container=start_search.getContainer();
-search.appendChild(start_container); 
-const end_container=end_search.getContainer();
-search.appendChild(end_container); 
-
-// 検索バーを開いている状態に設定する
-start_container.click();  
-end_container.click();
-
-// geocode の参照元のアクセスキーを設定
-const geocodeService = L.esri.Geocoding.geocodeService({
-  apikey: apiKey 
+  iconUrl: 'http://static.arcgis.com/images/Symbols/PeoplePlaces/Shopping.png',
+  iconSize: [24, 24],
+  popupAnchor: [0, 0]
 });
 
 // クリックした場所の位置情報を返し、reverce geocoding を実行し、地名を取得。
@@ -271,12 +269,12 @@ map.on("click", (e) => {
     if (error) {
       return;
     }
-    if(result.address["Match_addr"]=="日本"){
+    if(result.address["Match_addr"]==="日本"){
       address=coordinates.lat+","+coordinates.lng;
     }else{
       address=result.address["Match_addr"]
     }
-    if(currentStep=="start"){
+    if(currentStep==="start"){
       start_container.firstChild.value=address;
     }else{
       end_container.firstChild.value=address;
