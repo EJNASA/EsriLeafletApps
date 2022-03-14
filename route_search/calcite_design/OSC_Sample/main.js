@@ -1,4 +1,4 @@
-const apiKey="AAPK04fa14e5e44846418dafbe7d57201719NW_4MEtQB5Oe7zl9fQaR6b-xjvVZWuFosi_Kqe7KU2Jt0ydsmIbzT5wbBzvGSAvJ";
+const apiKey="YOUR_API_KEYS";
 const basemap = "OSM:Streets";
 
 // RestJS を使用するための API キーを設定
@@ -167,7 +167,7 @@ function adddirection(str,startpoint,endpoint){ // str: ルート案内の文章
   return direction;
 }
 
-// 各ポイントでの 100m 以内に存在する POIを検索する
+// 各ポイントでの 100m 以内に存在する POIを検索する 
 function addPoi(center){ 
   arcgisRest.geocode({
     params: {
